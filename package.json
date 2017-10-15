@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wandalen/wTemplateTreeResoler.git"
+    "url": "https://github.com/Wandalen/wTemplateTreeResolver.git"
   },
   "bugs": {
     "url": "https://github.com/Wandalen/wTemplateTreeResolver/issues"
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "wTesting": "",
-    "wtemplatetree": "."
+    "wtemplatetreeresolver": "."
   },
   "keywords": [
     "Template tree",
