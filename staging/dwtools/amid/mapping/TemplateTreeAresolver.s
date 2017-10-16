@@ -17,6 +17,7 @@ if( typeof module !== 'undefined' )
 
   var _ = wTools;
 
+  _.include( 'wCopyable' );
   // _.include( 'wFiles' );
 
 }
