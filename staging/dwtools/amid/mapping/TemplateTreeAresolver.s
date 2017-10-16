@@ -1,4 +1,4 @@
-( function _TemplateTreeResolver_s_( ) {
+( function _TemplateTreeAresolver_s_( ) {
 
 'use strict';
 
@@ -17,7 +17,6 @@ if( typeof module !== 'undefined' )
 
   var _ = wTools;
 
-  _.include( 'wCopyable' );
   // _.include( 'wFiles' );
 
 }
@@ -701,6 +700,10 @@ _.classMake
 
 wCopyable.mixin( Self );
 
+//
+
 wTools[ Self.nameShort ] = _global_[ Self.name ] = Self;
+if( typeof module !== 'undefined' )
+module[ 'exports' ] = Self;
 
 })();
