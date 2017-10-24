@@ -161,7 +161,7 @@ function _resolveString( src )
 {
   var self = this;
   var r;
-  var result = '';
+  var rarray = [];
 
   var optionsForExtract =
   {
@@ -172,9 +172,6 @@ function _resolveString( src )
 
   var strips = _.strExtractStereoStrips.call( optionsForExtract,src );
 
-  if( src === 'installer' )
-  debugger;
-
   /* */
 
   for( var s = 0 ; s < strips.length ; s++ )
@@ -182,38 +179,90 @@ function _resolveString( src )
 
     var strip = strips[ s ];
 
+    // if( strip[ 0 ] === 'opt/helperHpp' )
+    // debugger;
+
     if( _.strIs( strip ) )
     {
-      r = strip;
+      element = strip;
     }
     else
     {
-      r = self._queryEntered( strip[ 0 ] );
+      element = self._queryEntered( strip[ 0 ] );
     }
 
-    if( r instanceof self.ErrorQuerying )
+    if( element instanceof self.ErrorQuerying )
     {
-      r = _.err( r,'\ncant resolve :',src );
-      return r;
+      element = _.err( element,'\ncant resolve :',src );
+      return element;
     }
 
-    if( result )
+    rarray.push( element );
+
+  }
+
+  /* */
+
+  if( rarray.length < 2 )
+  return rarray[ 0 ];
+
+  /* */
+
+  var result = '';
+  for( var r = 0 ; r < rarray.length ; r++ )
+  {
+    var element = rarray[ r ];
+    if( _.arrayIs( element ) )
     {
-      if( _.regexpIs( result ) )
-      result = result.source;
-      if( _.regexpIs( r ) )
-      r = r.source;
+      _.assert( _.strIs( result ),'cant mix',_.strTypeOf( [] ),'with',_.strTypeOf( result ) );
+      result = _.dup( '',element.length );
+      _.assert( result.length === element.length );
+    }
+    else if( _.mapIs( element ) )
+    {
+      _.assert( _.strIs( result ),'cant mix',_.strTypeOf( Object.create( null ) ),'with',_.strTypeOf( result ) );
+      result = _.mapExtend( null,element );
+      for( var i in result )
+      result[ i ] = '';
+    }
+  }
 
-      if( !_.strIs( result ) && self.onStrFrom )
-      result = self.onStrFrom( result );
+  /* */
 
-      _.assert( _.strIs( result ) );
-      _.assert( _.strIs( r ) );
-      result += r;
+  function join( result,element )
+  {
+    result += element;
+    _.assert( _.strIs( result ) );
+    _.assert( _.strIs( element ) );
+    return result;
+  }
+
+  for( var r = 0 ; r < rarray.length ; r++ )
+  {
+    var element = rarray[ r ];
+
+    element = self.strFrom( element );
+
+    if( _.arrayIs( result ) )
+    {
+      for( var i = 0 ; i < result.length ; i++ )
+      if( _.arrayIs( element ) )
+      result[ i ] = join( result[ i ] , element[ i ] );
+      else
+      result[ i ] = join( result[ i ] , element );
+    }
+    else if( _.mapIs( result ) )
+    {
+      debugger;
+      for( var i in result )
+      if( _.mapIs( element ) )
+      result[ i ] = join( result[ i ] , element[ i ] );
+      else
+      result[ i ] = join( result[ i ] , element );
     }
     else
     {
-      result = r;
+      result = join( result , element );
     }
 
   }
@@ -577,6 +626,21 @@ function shouldInvestigate( src )
   return false;
 }
 
+//
+
+function strFrom( src )
+{
+  var self = this;
+
+  if( _.regexpIs( src ) )
+  src = src.source;
+
+  if( !_.strIs( src ) && self.onStrFrom )
+  src = self.onStrFrom( src );
+
+  return src;
+}
+
 // --
 // shortcuts
 // --
@@ -673,6 +737,7 @@ var Proto =
 
   _errorQuerying : _errorQuerying,
   shouldInvestigate : shouldInvestigate,
+  strFrom : strFrom,
 
 
   // shortcuts

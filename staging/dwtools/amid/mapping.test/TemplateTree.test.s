@@ -17,7 +17,7 @@ if( typeof module !== 'undefined' )
   var _ = wTools;
 
   _.include( 'wTesting' );
-  require( '../mapping/TemplateTreeResolver.s' );
+  require( '../mapping/TemplateTreeAresolver.s' );
 
 }
 
@@ -26,11 +26,9 @@ if( typeof module !== 'undefined' )
 var _ = wTools;
 var Parent = wTools.Tester;
 
-//
-
-var _ = wTools;
 var tree =
 {
+
   atomic1 : 'a1',
   atomic2 : 2,
   branch1 : { a : 1, b : 'b', c : /xx/, d : '{atomic1}', e : '{atomic2}', f : '{branch2.0}', g :'{branch2.5}' },
@@ -41,7 +39,12 @@ var tree =
 
   regexp : [ /b/,/a{regexp.0}/,/{regexp.1}c/,/{atomic1}x{regexp.0}y{regexp.2}z/g ],
 
-  error : [ '{error.a}','{error2.0}','{^^.c}','{error.3}' ]
+  error : [ '{error.a}','{error2.0}','{^^.c}','{error.3}' ],
+
+  array : [ 'a','b','c' ],
+  map : { a : 'a', b : 'b', c : 'c' },
+  arrayFromString : 'prefix {array} postfix',
+  mapFromString : 'prefix {map} postfix',
 
 }
 
@@ -165,7 +168,7 @@ function resolve( test )
 
   /* */
 
-  test.description = 'simple cases';
+  test.description = 'trivial cases';
 
   var got = template.resolve( 'atomic1' );
   var expected = 'atomic1';
@@ -215,11 +218,9 @@ function resolve( test )
 
   test.description = 'regexp cases';
 
-  debugger;
   var got = template.resolve( '{regexp.0}' );
   var expected = /b/;
   test.identical( got,expected );
-  debugger;
 
   var got = template.resolve( '{regexp.1}' );
   var expected = /ab/;
@@ -257,11 +258,8 @@ function resolve( test )
 
   test.description = 'relative';
 
-  debugger;
   var got = template.query( 'relative.1' );
-  debugger;
   var got = template.resolve( '{relative.1}' );
-  debugger;
   var expected = 'a';
   test.identical( got,expected );
 
@@ -313,57 +311,86 @@ function resolve( test )
 
   debugger;
   test.description = 'throwing error';
-  if( Config.debug )
+  if( !Config.debug )
+  return;
+
+  test.shouldThrowErrorSync( function()
   {
+    template.resolve( '{aa}' );
+  });
 
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( '{aa}' );
-    });
+  test.shouldThrowErrorSync( function()
+  {
+    template.resolve( 'aa{aa}aa' );
+  });
 
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( 'aa{aa}aa' );
-    });
+  test.shouldThrowErrorSync( function()
+  {
+    template.resolve( '{error.0}' );
+  });
 
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( '{error.0}' );
-    });
+  test.shouldThrowErrorSync( function()
+  {
+    template.resolve( '{error.1}' );
+  });
 
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( '{error.1}' );
-    });
+  test.shouldThrowErrorSync( function()
+  {
+    template.resolve( '{error.2}' );
+  });
 
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( '{error.2}' );
-    });
+  test.shouldThrowErrorSync( function()
+  {
+    template.resolve( '{error.3}' );
+  });
 
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( '{error.3}' );
-    });
+  test.shouldThrowErrorSync( function()
+  {
+    template.resolve( [ '{error.3}' ] );
+  });
 
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( [ '{error.3}' ] );
-    });
+  test.shouldThrowErrorSync( function()
+  {
+    template.resolve( { a : '{error.3}' } );
+  });
 
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( { a : '{error.3}' } );
-    });
-
-    test.shouldThrowErrorSync( function()
-    {
-      template.resolve( /{error.3}/ );
-    });
-
-  }
+  test.shouldThrowErrorSync( function()
+  {
+    template.resolve( /{error.3}/ );
+  });
 
   debugger;
+}
+
+//
+
+function resolveStringToArray( test )
+{
+
+  var template = new wTemplateTreeResolver
+  ({
+    tree : tree,
+    prefixSymbol : '{',
+    postfixSymbol : '}',
+    upSymbol : '.'
+  });
+
+  /* */
+
+  test.description = 'trivial cases';
+
+  var expected = [ 'prefix a postfix','prefix b postfix','prefix c postfix' ];
+  var got = template.resolve( '{arrayFromString}' );
+  test.identical( got, expected );
+
+  /* */
+
+  test.description = 'trivial cases';
+
+  var expected = { a : 'prefix a postfix', b : 'prefix b postfix', c : 'prefix c postfix' };
+  var got = template.resolve( '{mapFromString}' );
+  test.identical( got, expected );
+
 }
 
 // var tree =
@@ -372,7 +399,18 @@ function resolve( test )
 //   atomic2 : 2,
 //   branch1 : { a : 1, b : 'b', c : /xx/, d : '{atomic1}', e : '{atomic2}', f : '{branch2.0}', g :'{branch2.5}' },
 //   branch2 : [ 11,'bb',/yy/,'{atomic1}','{atomic2}','{branch1.a}','{branch1.f}' ],
+//   branch3 : [ 'a{atomic1}c','a{branch1.b}c','a{branch3.1}c','x{branch3.0}y{branch3.1}{branch3.2}z','{branch3.0}x{branch3.1}y{branch3.2}' ],
+//
+//   relative : [ 'a','{^^.0}','0{^^.1}0' ],
+//
 //   regexp : [ /b/,/a{regexp.0}/,/{regexp.1}c/,/{atomic1}x{regexp.0}y{regexp.2}z/g ],
+//
+//   error : [ '{error.a}','{error2.0}','{^^.c}','{error.3}' ],
+//
+//   array : [ 'a','b','c' ],
+//   map : { a : 'a', b : 'b', c : 'c' },
+//   arrayFromString : 'prefix {array} postfix',
+//   mapFromString : 'prefix {map} postfix',
 // }
 
 // --
@@ -388,8 +426,9 @@ var Self =
   tests :
   {
 
-    query : query,
-    resolve : resolve,
+    // query : query,
+    // resolve : resolve,
+    resolveStringToArray : resolveStringToArray,
 
   },
 
