@@ -5,24 +5,30 @@
 if( typeof module !== 'undefined' )
 {
 
-  if( typeof wBase === 'undefined' )
-  try
+  if( typeof _global_ === 'undefined' || !_global_.wBase )
   {
-    require( '../include/dwtools/Base.s' );
-  }
-  catch( err )
-  {
-    require( 'wTools' );
+    let toolsPath = '../../../dwtools/Base.s';
+    let toolsExternal = 0;
+    try
+    {
+      require.resolve( toolsPath )/*hhh*/;
+    }
+    catch( err )
+    {
+      toolsExternal = 1;
+      require( 'wTools' );
+    }
+    if( !toolsExternal )
+    require( toolsPath )/*hhh*/;
   }
 
-  var _ = wTools;
+  var _ = _global_.wTools;
 
   _.include( 'wCopyable' );
-  // _.include( 'wFiles' );
 
 }
 
-var _ = wTools;
+var _ = _global_.wTools;
 var Parent = null;
 var Self = function wTemplateTreeResolver( o )
 {
@@ -47,11 +53,11 @@ function init( o )
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.instanceInit( self );
 
-  if( o )
-  self.copy( o );
-
   if( self.constructor === Self )
   Object.preventExtensions( self );
+
+  if( o )
+  self.copy( o );
 
 }
 
@@ -65,11 +71,13 @@ function resolve( src )
 
   _.assert( arguments.length === 1 );
 
+
   var result = self._resolveEnter( src,'' );
 
   if( result instanceof self.ErrorQuerying )
   {
     debugger;
+    var result = self._resolveEnter( src,'' );
     throw _.err( result );
   }
 
@@ -162,6 +170,9 @@ function _resolveString( src )
   var self = this;
   var r;
   var rarray = [];
+
+  if( src === '' )
+  return src;
 
   var optionsForExtract =
   {
@@ -469,6 +480,11 @@ function _queryAct( here,query )
   }
   else
   {
+    if( !here )
+    {
+      // debugger;
+      return self._errorQuerying({ at : path, query : queryOriginal.join( self.upSymbol ) });
+    }
     result = here[ query[ 0 ] ];
     newQuery = query.slice( 1 );
   }
@@ -476,14 +492,20 @@ function _queryAct( here,query )
   /* */
 
   if( result === undefined )
-  return self._errorQuerying({ at : path, query : queryOriginal.join( self.upSymbol ) });
+  {
+    // debugger;
+    return self._errorQuerying({ at : path, query : queryOriginal.join( self.upSymbol ) });
+  }
 
   /* */
 
   var current = result;
   var entered = self._enter( current,query,path,0 );
   if( entered instanceof self.ErrorQuerying )
-  return self._errorQuerying({ reason : 'dead cycle', at : path, query : queryOriginal.join( self.upSymbol ) });
+  {
+    debugger;
+    return self._errorQuerying({ reason : 'dead cycle', at : path, query : queryOriginal.join( self.upSymbol ) });
+  }
 
   /* */
 
@@ -504,7 +526,10 @@ function _queryAct( here,query )
   self._leave( current );
 
   if( result === undefined )
-  return self._errorQuerying({ at : path, query : query.join( self.upSymbol ) });
+  {
+    debugger;
+    return self._errorQuerying({ at : path, query : query.join( self.upSymbol ) });
+  }
 
   return result;
 }
@@ -641,6 +666,15 @@ function strFrom( src )
   return src;
 }
 
+//
+
+function entityResolve( src,tree )
+{
+  _.assert( arguments.length === 2 );
+  var self = new Self({ tree : tree });
+  return self.resolve( src );
+}
+
 // --
 // shortcuts
 // --
@@ -692,6 +726,12 @@ var Restricts =
 var Statics =
 {
   ErrorQuerying : ErrorQuerying,
+  entityResolve : entityResolve,
+}
+
+var Globals =
+{
+  entityResolve : entityResolve,
 }
 
 // --
@@ -738,6 +778,7 @@ var Proto =
   _errorQuerying : _errorQuerying,
   shouldInvestigate : shouldInvestigate,
   strFrom : strFrom,
+  entityResolve : entityResolve,
 
 
   // shortcuts
@@ -752,6 +793,7 @@ var Proto =
   Associates : Associates,
   Restricts : Restricts,
   Statics : Statics,
+  Globals : Globals,
 
 }
 
@@ -764,11 +806,12 @@ _.classMake
   extend : Proto,
 });
 
-wCopyable.mixin( Self );
+_.Copyable.mixin( Self );
+_.mapExtend( _global_,Globals );
 
 //
 
-wTools[ Self.nameShort ] = _global_[ Self.name ] = Self;
+_[ Self.nameShort ] = _global_[ Self.name ] = Self;
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 

@@ -5,16 +5,24 @@
 if( typeof module !== 'undefined' )
 {
 
-  try
+  if( typeof _global_ === 'undefined' || !_global_.wBase )
   {
-    require( '../../Base.s' );
-  }
-  catch( err )
-  {
-    require( 'wTools' );
+    let toolsPath = '../../../../dwtools/Base.s';
+    let toolsExternal = 0;
+    try
+    {
+      require.resolve( toolsPath )/*hhh*/;
+    }
+    catch( err )
+    {
+      toolsExternal = 1;
+      require( 'wTools' );
+    }
+    if( !toolsExternal )
+    require( toolsPath )/*hhh*/;
   }
 
-  var _ = wTools;
+var _ = _global_.wTools;
 
   _.include( 'wTesting' );
   require( '../mapping/TemplateTreeAresolver.s' );
@@ -23,8 +31,8 @@ if( typeof module !== 'undefined' )
 
 //
 
-var _ = wTools;
-var Parent = wTools.Tester;
+var _ = _global_.wTools;
+var Parent = _.Tester;
 
 var tree =
 {
@@ -45,6 +53,9 @@ var tree =
   map : { a : 'a', b : 'b', c : 'c' },
   arrayFromString : 'prefix {array} postfix',
   mapFromString : 'prefix {map} postfix',
+
+  emptyString : '',
+  resolveEmptyString : '{emptyString}',
 
 }
 
@@ -307,9 +318,16 @@ function resolve( test )
   var expected = undefined;
   test.identical( got,expected );
 
+  /**/
+
+  test.description = 'resolving empty string';
+
+  var got = template.resolve( '{resolveEmptyString}' );
+  var expected = '';
+  test.identical( got,expected );
+
   /* */
 
-  debugger;
   test.description = 'throwing error';
   if( !Config.debug )
   return;
@@ -393,26 +411,6 @@ function resolveStringToArray( test )
 
 }
 
-// var tree =
-// {
-//   atomic1 : 'a1',
-//   atomic2 : 2,
-//   branch1 : { a : 1, b : 'b', c : /xx/, d : '{atomic1}', e : '{atomic2}', f : '{branch2.0}', g :'{branch2.5}' },
-//   branch2 : [ 11,'bb',/yy/,'{atomic1}','{atomic2}','{branch1.a}','{branch1.f}' ],
-//   branch3 : [ 'a{atomic1}c','a{branch1.b}c','a{branch3.1}c','x{branch3.0}y{branch3.1}{branch3.2}z','{branch3.0}x{branch3.1}y{branch3.2}' ],
-//
-//   relative : [ 'a','{^^.0}','0{^^.1}0' ],
-//
-//   regexp : [ /b/,/a{regexp.0}/,/{regexp.1}c/,/{atomic1}x{regexp.0}y{regexp.2}z/g ],
-//
-//   error : [ '{error.a}','{error2.0}','{^^.c}','{error.3}' ],
-//
-//   array : [ 'a','b','c' ],
-//   map : { a : 'a', b : 'b', c : 'c' },
-//   arrayFromString : 'prefix {array} postfix',
-//   mapFromString : 'prefix {map} postfix',
-// }
-
 // --
 // proto
 // --
@@ -426,8 +424,8 @@ var Self =
   tests :
   {
 
-    // query : query,
-    // resolve : resolve,
+    query : query,
+    resolve : resolve,
     resolveStringToArray : resolveStringToArray,
 
   },
