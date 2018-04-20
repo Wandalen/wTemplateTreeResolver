@@ -7,7 +7,7 @@ if( typeof module !== 'undefined' )
 
   if( typeof _global_ === 'undefined' || !_global_.wBase )
   {
-    let toolsPath = '../../../../dwtools/Base.s';
+    let toolsPath = '../../../dwtools/Base.s';
     let toolsExternal = 0;
     try
     {
@@ -22,10 +22,10 @@ if( typeof module !== 'undefined' )
     require( toolsPath );
   }
 
-var _ = _global_.wTools;
+  var _ = _global_.wTools;
 
   _.include( 'wTesting' );
-  require( '../mapping/TemplateTreeAresolver.s' );
+  require( '../amapping/TemplateTreeAresolver.s' );
 
 }
 
