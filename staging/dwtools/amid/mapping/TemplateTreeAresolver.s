@@ -71,7 +71,6 @@ function resolve( src )
 
   _.assert( arguments.length === 1 );
 
-
   var result = self._resolveEnter( src,'' );
 
   if( result instanceof self.ErrorQuerying )
@@ -204,7 +203,7 @@ function _resolveString( src )
 
     if( element instanceof self.ErrorQuerying )
     {
-      element = _.err( element,'\ncant resolve :',src );
+      element = _.err( element,'\nCant resolve :',src.substring( 0,80 ) );
       return element;
     }
 
@@ -622,6 +621,7 @@ ErrorQuerying.prototype.name = 'x';
 
 function _errorQuerying( o )
 {
+  debugger;
   var err = new ErrorQuerying( o );
   err = _.err( err );
   _.assert( err instanceof Error );
