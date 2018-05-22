@@ -621,7 +621,7 @@ ErrorQuerying.prototype.name = 'x';
 
 function _errorQuerying( o )
 {
-  debugger;
+  // debugger;
   var err = new ErrorQuerying( o );
   err = _.err( err );
   _.assert( err instanceof Error );
