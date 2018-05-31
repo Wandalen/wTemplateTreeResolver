@@ -419,7 +419,7 @@ var Self =
 {
 
   name : 'TemplateTreeResolver',
-  verbosity : 1,
+  // verbosity : 1,
 
   tests :
   {
