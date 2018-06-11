@@ -670,7 +670,9 @@ function strFrom( src )
 
 function entityResolve( src,tree )
 {
-  _.assert( arguments.length === 2 );
+  if( tree === undefined )
+  tree = src;
+  _.assert( arguments.length === 1 || arguments.length === 2 );
   var self = new Self({ tree : tree });
   return self.resolve( src );
 }
@@ -810,6 +812,10 @@ _.Copyable.mixin( Self );
 _.mapExtend( _global_,Globals );
 
 //
+
+if( typeof module !== 'undefined' )
+if( _global_.WTOOLS_PRIVATE )
+delete require.cache[ module.id ];
 
 _[ Self.nameShort ] = _global_[ Self.name ] = Self;
 if( typeof module !== 'undefined' )
