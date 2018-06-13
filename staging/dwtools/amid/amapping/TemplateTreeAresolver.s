@@ -737,7 +737,7 @@ var Globals =
 }
 
 // --
-// proto
+// define class
 // --
 
 var Proto =
