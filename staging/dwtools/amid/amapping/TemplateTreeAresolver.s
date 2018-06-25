@@ -175,12 +175,13 @@ function _resolveString( src )
 
   var optionsForExtract =
   {
+    src : src,
     prefix : self.prefixSymbol,
     postfix : self.postfixSymbol,
     onStrip : function( src ){ return [ src ]; },
   }
 
-  var strips = _.strExtractStereoStrips.call( optionsForExtract,src );
+  var strips = _.strExtractStereoStrips( optionsForExtract );
 
   /* */
 
