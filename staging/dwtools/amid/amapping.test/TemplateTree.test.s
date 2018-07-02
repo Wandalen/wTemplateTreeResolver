@@ -418,7 +418,7 @@ function resolveStringToArray( test )
 var Self =
 {
 
-  name : 'TemplateTreeResolver',
+  name : 'Tools/mid/TemplateTreeResolver',
   // verbosity : 1,
 
   tests :
