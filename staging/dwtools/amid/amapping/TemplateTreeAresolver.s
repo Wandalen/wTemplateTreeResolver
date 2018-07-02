@@ -69,7 +69,7 @@ function resolve( src )
 {
   var self = this;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   var result = self._resolveEnter( src,'' );
 
@@ -89,7 +89,7 @@ function resolveTry( src )
 {
   var self = this;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   var result = self._resolveEnter( src,'' );
 
@@ -107,7 +107,7 @@ function _resolveEnter( src,query )
   var l = self.current.length;
   var node,path;
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'expects exactly two argument' );
 
   if( query === '' )
   {
@@ -142,7 +142,7 @@ function _resolveEntered( src )
 {
   var self = this;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   if( !self.shouldInvestigate( src ) )
   return src;
@@ -349,7 +349,7 @@ function query( query )
 {
   var self = this;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   var result = self._queryEntering( query );
   if( result instanceof self.ErrorQuerying )
@@ -367,7 +367,7 @@ function queryTry( query )
 {
   var self = this;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   var result = self._queryEntering( query );
   if( result instanceof self.ErrorQuerying )
@@ -383,7 +383,7 @@ function _querySplit( query )
   var self = this;
 
   _.assert( _.strIs( query ) || _.arrayIs( query ) );
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   if( _.strIs( query ) )
   {
@@ -411,7 +411,7 @@ function _queryEntering( query )
 {
   var self = this;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( !self.current.length );
 
   query = self._querySplit( query );
@@ -434,7 +434,7 @@ function _queryEntered( query )
   var self = this;
 
   _.assert( _.strIs( query ) || _.arrayIs( query ) );
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   if( _.strIs( query ) )
   {
@@ -451,7 +451,7 @@ function _queryEntered( query )
 function _queryAct( here,query )
 {
 
-  _.assert( arguments.length === 2 );
+  _.assert( arguments.length === 2, 'expects exactly two argument' );
   _.assert( query.length > 0 );
   // _.assert( query[ 0 ] === self.upSymbol || query[ 0 ] === self.downSymbol );
 
@@ -595,7 +595,7 @@ function _leave( node )
 {
   var self = this;
 
-  _.assert( arguments.length === 1 );
+  _.assert( arguments.length === 1, 'expects single argument' );
 
   var d = self.current.pop();
 
