@@ -178,10 +178,10 @@ function _resolveString( src )
     src : src,
     prefix : self.prefixSymbol,
     postfix : self.postfixSymbol,
-    onStrip : function( src ){ return [ src ]; },
+    onInlined : function( src ){ return [ src ]; },
   }
 
-  var strips = _.strExtractStereoStrips( optionsForExtract );
+  var strips = _.strExtractInlinedStereo( optionsForExtract );
 
   /* */
 
