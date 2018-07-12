@@ -140,7 +140,7 @@ function query( test )
 
   /* */
 
-  test.description = 'error';
+  test.case = 'error';
 
   var got = template.queryTry( 'aa' );
   var expected = undefined;
@@ -179,7 +179,7 @@ function resolve( test )
 
   /* */
 
-  test.description = 'trivial cases';
+  test.case = 'trivial cases';
 
   var got = template.resolve( 'atomic1' );
   var expected = 'atomic1';
@@ -203,7 +203,7 @@ function resolve( test )
 
   /* */
 
-  test.description = 'complex cases';
+  test.case = 'complex cases';
 
   var got = template.resolve( '{branch3.0}' );
   var expected = 'aa1c';
@@ -227,7 +227,7 @@ function resolve( test )
 
   /* */
 
-  test.description = 'regexp cases';
+  test.case = 'regexp cases';
 
   var got = template.resolve( '{regexp.0}' );
   var expected = /b/;
@@ -251,7 +251,7 @@ function resolve( test )
 
   /* */
 
-  test.description = 'non-string';
+  test.case = 'non-string';
 
   var got = template.resolve( [ '{atomic1}','{atomic2}' ] );
   var expected = [ 'a1',2 ];
@@ -267,7 +267,7 @@ function resolve( test )
 
   /* */
 
-  test.description = 'relative';
+  test.case = 'relative';
 
   var got = template.query( 'relative.1' );
   var got = template.resolve( '{relative.1}' );
@@ -280,7 +280,7 @@ function resolve( test )
 
   /* */
 
-  test.description = 'not throwing error';
+  test.case = 'not throwing error';
 
   var got = template.resolveTry( '{aa}' );
   var expected = undefined;
@@ -320,7 +320,7 @@ function resolve( test )
 
   /**/
 
-  test.description = 'resolving empty string';
+  test.case = 'resolving empty string';
 
   var got = template.resolve( '{resolveEmptyString}' );
   var expected = '';
@@ -328,7 +328,7 @@ function resolve( test )
 
   /* */
 
-  test.description = 'throwing error';
+  test.case = 'throwing error';
   if( !Config.debug )
   return;
 
@@ -395,7 +395,7 @@ function resolveStringToArray( test )
 
   /* */
 
-  test.description = 'trivial cases';
+  test.case = 'trivial cases';
 
   var expected = [ 'prefix a postfix','prefix b postfix','prefix c postfix' ];
   var got = template.resolve( '{arrayFromString}' );
@@ -403,7 +403,7 @@ function resolveStringToArray( test )
 
   /* */
 
-  test.description = 'trivial cases';
+  test.case = 'trivial cases';
 
   var expected = { a : 'prefix a postfix', b : 'prefix b postfix', c : 'prefix c postfix' };
   var got = template.resolve( '{mapFromString}' );
