@@ -156,7 +156,7 @@ function _resolveEntered( src )
   if( _.mapIs( src ) )
   return self._resolveMap( src );
 
-  if( _.arrayLike( src ) )
+  if( _.longIs( src ) )
   return self._resolveArray( src );
 
   throw _.err( 'repalce : unexpected type of src',_.strTypeOf( src ) );
@@ -646,7 +646,7 @@ function shouldInvestigate( src )
   if( _.regexpIs( src ) )
   return self.investigatingRegexp;
 
-  if( _.arrayLike( src ) )
+  if( _.longIs( src ) )
   return self.investigatingArrayLike;
 
   return false;
