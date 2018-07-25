@@ -390,12 +390,15 @@ function _querySplit( query )
 
     /* query = query.split( self.upSymbol ); */
 
-    query = _.strSplit
+    query = _.strSplit/**1**/
     ({
       src : query,
       delimeter : [ self.upSymbol,self.downSymbol ],
       preservingDelimeters : 1,
+      preservingEmpty : 0,
     });
+
+    debugger;
 
     if( query[ 0 ] !== self.downSymbol && query[ 0 ] !== self.upSymbol )
     query.unshift( self.upSymbol );
