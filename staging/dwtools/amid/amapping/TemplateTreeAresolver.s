@@ -40,7 +40,7 @@ var Self = function wTemplateTreeResolver( o )
   return Self.prototype.init.apply( this,arguments );
 }
 
-Self.nameShort = 'TemplateTreeResolver';
+Self.shortName = 'TemplateTreeResolver';
 
 // --
 // inter
@@ -698,7 +698,7 @@ function resolveAndAssign( src )
 }
 
 // --
-// relationships
+// relations
 // --
 
 var Composes =
@@ -792,7 +792,7 @@ var Proto =
   resolveAndAssign : resolveAndAssign,
 
 
-  // relationships
+  // relations
 
   constructor : Self,
   Composes : Composes,
@@ -821,7 +821,7 @@ if( typeof module !== 'undefined' )
 if( _global_.WTOOLS_PRIVATE )
 delete require.cache[ module.id ];
 
-_[ Self.nameShort ] = _global_[ Self.name ] = Self;
+_[ Self.shortName ] = _global_[ Self.name ] = Self;
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = Self;
 
