@@ -398,8 +398,6 @@ function _querySplit( query )
       preservingEmpty : 0,
     });
 
-    debugger;
-
     if( query[ 0 ] !== self.downSymbol && query[ 0 ] !== self.upSymbol )
     query.unshift( self.upSymbol );
 
