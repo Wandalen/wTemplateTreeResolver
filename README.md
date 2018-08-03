@@ -8,3 +8,4 @@ Class to resolve tree-like with links data structures or paths in the structure.
 npm install
 node sample/Sample.s
 ```
+
