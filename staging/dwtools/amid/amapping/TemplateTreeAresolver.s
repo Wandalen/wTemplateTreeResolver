@@ -800,7 +800,7 @@ var Proto =
 
   // relations
 
-  /* constructor * : * Self, */
+  
   Composes : Composes,
   Associates : Associates,
   Restricts : Restricts,
