@@ -715,7 +715,7 @@ var Composes =
   investigatingRegexp : true,
   investigatingArrayLike : true,
 
-  current : [],
+  current : _.define.own([]),
 
   prefixSymbol : '{{',
   postfixSymbol : '}}',
@@ -755,7 +755,6 @@ var Proto =
 
   init : init,
 
-
   // resolve
 
   resolve : resolve,
@@ -767,7 +766,6 @@ var Proto =
   _resolveArray : _resolveArray,
   _resolveRegexp : _resolveRegexp,
 
-
   // query
 
   query : query,
@@ -777,13 +775,11 @@ var Proto =
   _queryEntered : _queryEntered,
   _queryAct : _queryAct,
 
-
   // tracker
 
   _entryGet : _entryGet,
   _enter : _enter,
   _leave : _leave,
-
 
   // etc
 
@@ -792,15 +788,12 @@ var Proto =
   strFrom : strFrom,
   entityResolve : entityResolve,
 
-
   // shortcuts
 
   resolveAndAssign : resolveAndAssign,
 
-
   // relations
 
-  
   Composes : Composes,
   Associates : Associates,
   Restricts : Restricts,
@@ -811,7 +804,7 @@ var Proto =
 
 // define
 
-_.classMake
+_.classDeclare
 ({
   cls : Self,
   parent : Parent,
