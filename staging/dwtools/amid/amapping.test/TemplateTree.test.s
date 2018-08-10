@@ -412,7 +412,7 @@ function resolveStringToArray( test )
 }
 
 // --
-// define class
+// declare
 // --
 
 var Self =
