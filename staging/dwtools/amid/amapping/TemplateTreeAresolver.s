@@ -797,7 +797,7 @@ var Proto =
 
 }
 
-// define
+//
 
 _.classDeclare
 ({
