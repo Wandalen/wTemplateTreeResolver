@@ -393,7 +393,7 @@ function _querySplit( query )
 
     /* query = query.split( self.upSymbol ); */
 
-    query = _.strSplit/**1**/
+    query = _.strSplit
     ({
       src : query,
       delimeter : [ self.upSymbol,self.downSymbol ],
