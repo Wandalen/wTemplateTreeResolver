@@ -631,7 +631,7 @@ function _errorQuerying( o )
   err = _.err( err );
   _.assert( err instanceof Error );
   _.assert( err instanceof ErrorQuerying );
-  _.assert( err.stack );
+  _.assert( !!err.stack );
   return err;
 }
 
