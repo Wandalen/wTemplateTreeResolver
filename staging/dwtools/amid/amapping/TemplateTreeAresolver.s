@@ -94,10 +94,23 @@ function resolveTry( src )
 
   _.assert( arguments.length === 1, 'expects single argument' );
 
-  let result = self._resolveEnter( src,'' );
+  let result = self._resolve( src );
 
   if( result instanceof self.ErrorQuerying )
   return;
+
+  return result;
+}
+
+//
+
+function _resolve( src )
+{
+  let self = this;
+
+  _.assert( arguments.length === 1, 'expects single argument' );
+
+  let result = self._resolveEnter( src,'' );
 
   return result;
 }
@@ -207,16 +220,20 @@ function _resolveString( src )
 
     if( element instanceof self.ErrorQuerying )
     {
-      element = _.err( 'Cant resolve', _.strQuote( strip ), 'of', _.strQuote( src.substring( 0,80 ) ), '\n', 'It is', _.toStrShort( element ) );
-      return element;
+      debugger;
+      element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is not defined', '\n', element );
+      return element; 
     }
 
-    element = self.strFrom( element );
-
-    if( !_.strIs( element ) )
+    if( strips.length > 1 )
     {
-      element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
-      return element;
+      element = self.strFrom( element );
+      if( !_.strIs( element ) )
+      {
+        debugger;
+        element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
+        return element;
+      }
     }
 
     rarray.push( element );
@@ -767,6 +784,7 @@ let Proto =
 
   resolve : resolve,
   resolveTry : resolveTry,
+  _resolve : _resolve,
   _resolveEnter : _resolveEnter,
   _resolveEntered : _resolveEntered,
   _resolveString : _resolveString,
