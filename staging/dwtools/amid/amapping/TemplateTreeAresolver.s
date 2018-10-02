@@ -186,9 +186,6 @@ function _resolveString( src )
 
   let strips = _.strExtractInlinedStereo( optionsForExtract );
 
-  if( src === '{{starterDirPath}}/{{appName}}.raw.starter.config.s' )
-  debugger;
-
   /* */
 
   for( let s = 0 ; s < strips.length ; s++ )
