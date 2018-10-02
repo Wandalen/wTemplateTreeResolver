@@ -211,6 +211,8 @@ function _resolveString( src )
       return element;
     }
 
+    element = self.strFrom( element );
+
     if( !_.strIs( element ) )
     {
       element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
@@ -256,8 +258,6 @@ function _resolveString( src )
   for( let r = 0 ; r < rarray.length ; r++ )
   {
     let element = rarray[ r ];
-
-    element = self.strFrom( element );
 
     if( _.arrayIs( result ) )
     {
