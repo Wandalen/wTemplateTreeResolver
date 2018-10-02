@@ -30,15 +30,15 @@ if( typeof module !== 'undefined' )
     require( toolsPath );
   }
 
-  var _ = _global_.wTools;
+  let _ = _global_.wTools;
 
   _.include( 'wCopyable' );
 
 }
 
-var _ = _global_.wTools;
-var Parent = null;
-var Self = function wTemplateTreeResolver( o )
+let _ = _global_.wTools;
+let Parent = null;
+let Self = function wTemplateTreeResolver( o )
 {
   return _.instanceConstructor( Self, this, arguments );
 }
@@ -51,7 +51,7 @@ Self.shortName = 'TemplateTreeResolver';
 
 function init( o )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
   _.instanceInit( self );
@@ -70,16 +70,16 @@ function init( o )
 
 function resolve( src )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 1, 'expects single argument' );
 
-  var result = self._resolveEnter( src,'' );
+  let result = self._resolveEnter( src,'' );
 
   if( result instanceof self.ErrorQuerying )
   {
     debugger;
-    var result = self._resolveEnter( src,'' );
+    let result = self._resolveEnter( src,'' );
     throw _.err( result );
   }
 
@@ -90,11 +90,11 @@ function resolve( src )
 
 function resolveTry( src )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 1, 'expects single argument' );
 
-  var result = self._resolveEnter( src,'' );
+  let result = self._resolveEnter( src,'' );
 
   if( result instanceof self.ErrorQuerying )
   return;
@@ -106,9 +106,9 @@ function resolveTry( src )
 
 function _resolveEnter( src,query )
 {
-  var self = this;
-  var l = self.current.length;
-  var node,path;
+  let self = this;
+  let l = self.current.length;
+  let node,path;
 
   _.assert( arguments.length === 2, 'expects exactly two arguments' );
 
@@ -124,14 +124,14 @@ function _resolveEnter( src,query )
     path = self.current[ self.current.length-1 ].path;
   }
 
-  var entered = self._enter( node,[ query ],path,0 );
+  let entered = self._enter( node,[ query ],path,0 );
   if( entered instanceof self.ErrorQuerying )
   {
     debugger;
     return entered;
   }
 
-  var result = self._resolveEntered( src );
+  let result = self._resolveEntered( src );
 
   self._leave( node );
   _.assert( self.current.length === l );
@@ -143,7 +143,7 @@ function _resolveEnter( src,query )
 
 function _resolveEntered( src )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 1, 'expects single argument' );
 
@@ -169,14 +169,14 @@ function _resolveEntered( src )
 
 function _resolveString( src )
 {
-  var self = this;
-  var r;
-  var rarray = [];
+  let self = this;
+  let r;
+  let rarray = [];
 
   if( src === '' )
   return src;
 
-  var optionsForExtract =
+  let optionsForExtract =
   {
     src : src,
     prefix : self.prefixSymbol,
@@ -184,17 +184,17 @@ function _resolveString( src )
     onInlined : function( src ){ return [ src ]; },
   }
 
-  var strips = _.strExtractInlinedStereo( optionsForExtract );
+  let strips = _.strExtractInlinedStereo( optionsForExtract );
+
+  if( src === '{{starterDirPath}}/{{appName}}.raw.starter.config.s' )
+  debugger;
 
   /* */
 
-  for( var s = 0 ; s < strips.length ; s++ )
+  for( let s = 0 ; s < strips.length ; s++ )
   {
-
-    var strip = strips[ s ];
-
-    // if( strip[ 0 ] === 'opt/helperHpp' )
-    // debugger;
+    let element;
+    let strip = strips[ s ];
 
     if( _.strIs( strip ) )
     {
@@ -205,9 +205,18 @@ function _resolveString( src )
       element = self._queryEntered( strip[ 0 ] );
     }
 
+    if( _.arrayIs( strip ) )
+    strip = strip[ 0 ];
+
     if( element instanceof self.ErrorQuerying )
     {
-      element = _.err( element,'\nCant resolve :',src.substring( 0,80 ) );
+      element = _.err( 'Cant resolve', _.strQuote( strip ), 'of', _.strQuote( src.substring( 0,80 ) ), '\n', 'It is', _.toStrShort( element ) );
+      return element;
+    }
+
+    if( !_.strIs( element ) )
+    {
+      element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
       return element;
     }
 
@@ -222,44 +231,40 @@ function _resolveString( src )
 
   /* */
 
-  var result = '';
-  for( var r = 0 ; r < rarray.length ; r++ )
+  let result = '';
+  for( let r = 0 ; r < rarray.length ; r++ )
   {
-    var element = rarray[ r ];
+    let element = rarray[ r ];
     if( _.arrayIs( element ) )
     {
-      _.assert( _.strIs( result ),'cant mix',_.strTypeOf( [] ),'with',_.strTypeOf( result ) );
+      _.sure( _.strIs( result ),'Cant mix', _.strTypeOf( [] ),'with',_.strTypeOf( result ) );
       result = _.dup( '',element.length );
       _.assert( result.length === element.length );
     }
     else if( _.mapIs( element ) )
     {
-      _.assert( _.strIs( result ),'cant mix',_.strTypeOf( Object.create( null ) ),'with',_.strTypeOf( result ) );
+      _.sure( _.strIs( result ),'Cant mix', _.strTypeOf( Object.create( null ) ),'with',_.strTypeOf( result ) );
       result = _.mapExtend( null,element );
-      for( var i in result )
+      for( let i in result )
       result[ i ] = '';
+    }
+    else
+    {
+      // _.assert( _.strIs( element ) );
     }
   }
 
   /* */
 
-  function join( result,element )
+  for( let r = 0 ; r < rarray.length ; r++ )
   {
-    result += element;
-    _.assert( _.strIs( result ) );
-    _.assert( _.strIs( element ) );
-    return result;
-  }
-
-  for( var r = 0 ; r < rarray.length ; r++ )
-  {
-    var element = rarray[ r ];
+    let element = rarray[ r ];
 
     element = self.strFrom( element );
 
     if( _.arrayIs( result ) )
     {
-      for( var i = 0 ; i < result.length ; i++ )
+      for( let i = 0 ; i < result.length ; i++ )
       if( _.arrayIs( element ) )
       result[ i ] = join( result[ i ] , element[ i ] );
       else
@@ -268,7 +273,7 @@ function _resolveString( src )
     else if( _.mapIs( result ) )
     {
       debugger;
-      for( var i in result )
+      for( let i in result )
       if( _.mapIs( element ) )
       result[ i ] = join( result[ i ] , element[ i ] );
       else
@@ -282,17 +287,28 @@ function _resolveString( src )
   }
 
   return result;
+
+  /* - */
+
+  function join( result, element )
+  {
+    result += element;
+    _.assert( _.strIs( result ) );
+    _.assert( _.strIs( element ) );
+    return result;
+  }
+
 }
 
 //
 
 function _resolveRegexp( src )
 {
-  var self = this;
+  let self = this;
 
   _.assert( _.regexpIs( src ) );
 
-  var source = src.source;
+  let source = src.source;
   source = self._resolveString( source );
 
   if( source instanceof self.ErrorQuerying )
@@ -310,10 +326,10 @@ function _resolveRegexp( src )
 
 function _resolveMap( src )
 {
-  var self = this;
-  var result = Object.create( null );
+  let self = this;
+  let result = Object.create( null );
 
-  for( var s in src )
+  for( let s in src )
   {
     result[ s ] = self._resolveEnter( src[ s ],s );
     if( result[ s ] instanceof self.ErrorQuerying )
@@ -329,10 +345,10 @@ function _resolveMap( src )
 
 function _resolveArray( src )
 {
-  var self = this;
-  var result = new src.constructor( src.length );
+  let self = this;
+  let result = new src.constructor( src.length );
 
-  for( var s = 0 ; s < src.length ; s++ )
+  for( let s = 0 ; s < src.length ; s++ )
   {
     result[ s ] = self._resolveEnter( src[ s ],s );
     if( result[ s ] instanceof self.ErrorQuerying )
@@ -350,11 +366,11 @@ function _resolveArray( src )
 
 function query( query )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 1, 'expects single argument' );
 
-  var result = self._queryEntering( query );
+  let result = self._queryEntering( query );
   if( result instanceof self.ErrorQuerying )
   {
     debugger;
@@ -368,11 +384,11 @@ function query( query )
 
 function queryTry( query )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 1, 'expects single argument' );
 
-  var result = self._queryEntering( query );
+  let result = self._queryEntering( query );
   if( result instanceof self.ErrorQuerying )
   return;
 
@@ -383,7 +399,7 @@ function queryTry( query )
 
 function _querySplit( query )
 {
-  var self = this;
+  let self = this;
 
   _.assert( _.strIs( query ) || _.arrayIs( query ) );
   _.assert( arguments.length === 1, 'expects single argument' );
@@ -413,7 +429,7 @@ function _querySplit( query )
 
 function _queryEntering( query )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 1, 'expects single argument' );
   _.assert( !self.current.length );
@@ -423,7 +439,7 @@ function _queryEntering( query )
   //self._enter( self.tree,query,self.upSymbol,1 );
   self._enter( self.tree,query,'',1 );
 
-  var result = self._queryEntered( query );
+  let result = self._queryEntered( query );
 
   self._leave( self.tree );
   _.assert( self.current.length === 0 );
@@ -435,7 +451,7 @@ function _queryEntering( query )
 
 function _queryEntered( query )
 {
-  var self = this;
+  let self = this;
 
   _.assert( _.strIs( query ) || _.arrayIs( query ) );
   _.assert( arguments.length === 1, 'expects single argument' );
@@ -445,7 +461,7 @@ function _queryEntered( query )
     query = self._querySplit( query );
   }
 
-  var result = self._queryAct( self.tree,query );
+  let result = self._queryAct( self.tree,query );
 
   return result;
 }
@@ -459,11 +475,11 @@ function _queryAct( here,query )
   _.assert( query.length > 0 );
   // _.assert( query[ 0 ] === self.upSymbol || query[ 0 ] === self.downSymbol );
 
-  var result;
-  var self = this;
-  var path = self.current[ self.current.length-1 ].path;
-  var queryOriginal = query;
-  var newQuery;
+  let result;
+  let self = this;
+  let path = self.current[ self.current.length-1 ].path;
+  let queryOriginal = query;
+  let newQuery;
 
   /* clear from up symbol */
 
@@ -474,7 +490,7 @@ function _queryAct( here,query )
 
   if( query[ 0 ] === self.downSymbol )
   {
-    for( var q = 0 ; q < query.length ; q++ )
+    for( let q = 0 ; q < query.length ; q++ )
     if( query[ q ] !== self.downSymbol )
     break;
     query.splice( 0,q );
@@ -503,8 +519,8 @@ function _queryAct( here,query )
 
   /* */
 
-  var current = result;
-  var entered = self._enter( current,query,path,0 );
+  let current = result;
+  let entered = self._enter( current,query,path,0 );
   if( entered instanceof self.ErrorQuerying )
   {
     debugger;
@@ -544,9 +560,9 @@ function _queryAct( here,query )
 
 function _entryGet( entry )
 {
-  var self = this;
+  let self = this;
 
-  var result = _.entityFilter( self.current,entry );
+  let result = _.entityFilter( self.current,entry );
 
   return result;
 }
@@ -555,12 +571,12 @@ function _entryGet( entry )
 
 function _enter( node,query,path,throwing )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 4 );
   _.assert( _.arrayIs( query ) );
 
-  var newPath;
+  let newPath;
 
   if( path === '' )
   newPath = '/'
@@ -569,10 +585,10 @@ function _enter( node,query,path,throwing )
   else
   newPath = path + query[ 0 ] + query[ 1 ];
 
-  // var newPath = path !== self.upSymbol ? path + query[ 0 ] + query[ 1 ] : path + query[ 0 ]; debugger;
-  // var newPath = path + query[ 0 ] + query[ 1 ]; debugger;
+  // let newPath = path !== self.upSymbol ? path + query[ 0 ] + query[ 1 ] : path + query[ 0 ]; debugger;
+  // let newPath = path + query[ 0 ] + query[ 1 ]; debugger;
 
-  var d = {};
+  let d = {};
   d.node = node;
   d.path = newPath;
   d.query = query.join( '' );
@@ -581,7 +597,7 @@ function _enter( node,query,path,throwing )
   if( query )
   if( self._entryGet({ query : d.query, node : node }).length )
   {
-    var err = self._errorQuerying({ reason : 'dead cycle', at : newPath, query : d.query });;
+    let err = self._errorQuerying({ reason : 'dead cycle', at : newPath, query : d.query });;
     if( throwing )
     throw err;
     else
@@ -597,11 +613,11 @@ function _enter( node,query,path,throwing )
 
 function _leave( node )
 {
-  var self = this;
+  let self = this;
 
   _.assert( arguments.length === 1, 'expects single argument' );
 
-  var d = self.current.pop();
+  let d = self.current.pop();
 
   _.assert( d.node === node );
 
@@ -627,7 +643,7 @@ ErrorQuerying.prototype.name = 'x';
 function _errorQuerying( o )
 {
   // debugger;
-  var err = new ErrorQuerying( o );
+  let err = new ErrorQuerying( o );
   err = _.err( err );
   _.assert( err instanceof Error );
   _.assert( err instanceof ErrorQuerying );
@@ -639,7 +655,7 @@ function _errorQuerying( o )
 
 function shouldInvestigate( src )
 {
-  var self = this;
+  let self = this;
 
   if( _.strIs( src ) )
   return self.investigatingString;
@@ -660,7 +676,7 @@ function shouldInvestigate( src )
 
 function strFrom( src )
 {
-  var self = this;
+  let self = this;
 
   if( _.regexpIs( src ) )
   src = src.source;
@@ -678,7 +694,7 @@ function entityResolve( src,tree )
   if( tree === undefined )
   tree = src;
   _.assert( arguments.length === 1 || arguments.length === 2 );
-  var self = new Self({ tree : tree });
+  let self = new Self({ tree : tree });
   return self.resolve( src );
 }
 
@@ -688,7 +704,7 @@ function entityResolve( src,tree )
 
 function resolveAndAssign( src )
 {
-  var self = this;
+  let self = this;
 
   if( src !== undefined )
   self.tree = src;
@@ -702,7 +718,7 @@ function resolveAndAssign( src )
 // relations
 // --
 
-var Composes =
+let Composes =
 {
 
   investigatingString : true,
@@ -721,22 +737,22 @@ var Composes =
 
 }
 
-var Associates =
+let Associates =
 {
   tree : null,
 }
 
-var Restricts =
+let Restricts =
 {
 }
 
-var Statics =
+let Statics =
 {
   ErrorQuerying : ErrorQuerying,
   entityResolve : entityResolve,
 }
 
-var Globals =
+let Globals =
 {
   entityResolve : entityResolve,
 }
@@ -745,7 +761,7 @@ var Globals =
 // declare
 // --
 
-var Proto =
+let Proto =
 {
 
   init : init,
