@@ -222,19 +222,19 @@ function _resolveString( src )
     {
       debugger;
       element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is not defined', '\n', element );
-      return element; 
+      return element;
     }
 
-    if( strips.length > 1 )
-    {
-      element = self.strFrom( element );
-      if( !_.strIs( element ) )
-      {
-        debugger;
-        element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
-        return element;
-      }
-    }
+    // if( strips.length > 1 )
+    // {
+    //   element = self.strFrom( element );
+    //   if( !_.strIs( element ) )
+    //   {
+    //     debugger;
+    //     element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
+    //     return element;
+    //   }
+    // }
 
     rarray.push( element );
 
@@ -275,6 +275,8 @@ function _resolveString( src )
   for( let r = 0 ; r < rarray.length ; r++ )
   {
     let element = rarray[ r ];
+
+    element = self.strFrom( element );
 
     if( _.arrayIs( result ) )
     {
@@ -504,7 +506,7 @@ function _queryAct( here,query )
 
   if( query[ 0 ] === self.downSymbol )
   {
-    for( let q = 0 ; q < query.length ; q++ )
+    for( var q = 0 ; q < query.length ; q++ )
     if( query[ q ] !== self.downSymbol )
     break;
     query.splice( 0,q );
