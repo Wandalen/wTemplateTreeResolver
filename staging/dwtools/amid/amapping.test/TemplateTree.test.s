@@ -411,6 +411,119 @@ function resolveStringToArray( test )
 
 }
 
+//
+
+function onStrFrom( test )
+{
+  function File( path )
+  {
+    this.filePath = path;
+  }
+
+  let tree =
+  {
+    complex1 : new File( '/a/b/c' ),
+    complex2 : [ new File( '/x/y/z' ), new File( '/z/y/x' ) ],
+    complex3 : { file1 : new File( '/1/2/3' ), file2 : new File( '/4/5/6' ) },
+    complex4 : new Date(),
+  }
+  var template = new wTemplateTreeResolver
+  ({
+    tree : tree,
+    prefixSymbol : '{{',
+    postfixSymbol : '}}',
+    onStrFrom : onStrFrom,
+    upSymbol : '.'
+  });
+
+  function onStrFrom( src )
+  {
+    if( src instanceof File )
+    return src.filePath;
+
+    if( _.arrayIs( src ) )
+    return src.map( ( e ) => e instanceof File ? e.filePath : _.toStr( e ) );
+
+    if( _.mapIs( src ) )
+    for( var k in src )
+    src[ k ] = src[ k ] instanceof File ? src[ k ].filePath : _.toStr( src[ k ] );
+
+    return src;
+  }
+
+  var got = template.resolve( '{{complex1}}' );
+  var expected = tree.complex1;
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex1.filePath}}' );
+  var expected = '/a/b/c';
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex2}}' );
+  var expected = tree.complex2;
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex2.0.filePath}}' );
+  var expected = '/x/y/z';
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex3}}' );
+  var expected = tree.complex3;
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex3.file1.filePath}}' );
+  var expected = '/1/2/3';
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex1}} , {{complex1}}' );
+  var expected = '/a/b/c , /a/b/c'
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex1.filePath}} , {{complex2.0.filePath}}' );
+  var expected = '/a/b/c , /x/y/z'
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex1}} , {{complex2}}' );
+  var expected =
+  [
+    '/a/b/c , /x/y/z',
+    '/a/b/c , /z/y/x',
+  ]
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex2}} , {{complex1}}' );
+  var expected =
+  [
+    '/x/y/z , /a/b/c',
+    '/z/y/x , /a/b/c',
+  ]
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex1}} , {{complex3}}' );
+  var expected =
+  {
+    file1 : '/a/b/c , /1/2/3',
+    file2 : '/a/b/c , /4/5/6'
+  }
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex3}} , {{complex1}}' );
+  var expected =
+  {
+    file1 : '/1/2/3 , /a/b/c',
+    file2 : '/4/5/6 , /a/b/c'
+  }
+  test.identical( got, expected );
+
+  // '{{complex2}} , {{complex2}}'
+  // '{{complex3}} , {{complex3}}'
+
+  var got = template.resolve( '{{complex1}} , {{complex4}}' );
+  test.is( _.errIs( got ) );
+
+
+}
+
 // --
 // declare
 // --
@@ -427,6 +540,7 @@ var Self =
     query : query,
     resolve : resolve,
     resolveStringToArray : resolveStringToArray,
+    onStrFrom : onStrFrom
 
   },
 

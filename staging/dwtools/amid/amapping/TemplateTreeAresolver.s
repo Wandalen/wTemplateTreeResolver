@@ -225,16 +225,16 @@ function _resolveString( src )
       return element;
     }
 
-    // if( strips.length > 1 )
-    // {
-    //   element = self.strFrom( element );
-    //   if( !_.strIs( element ) )
-    //   {
-    //     debugger;
-    //     element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
-    //     return element;
-    //   }
-    // }
+    if( strips.length > 1 )
+    {
+      element = self.strFrom( element );
+      if( !_.strIs( element ) && !_.arrayIs( element ) && !_.mapIs( element ) )
+      {
+        debugger;
+        element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
+        return element;
+      }
+    }
 
     rarray.push( element );
 
@@ -275,8 +275,6 @@ function _resolveString( src )
   for( let r = 0 ; r < rarray.length ; r++ )
   {
     let element = rarray[ r ];
-
-    element = self.strFrom( element );
 
     if( _.arrayIs( result ) )
     {
