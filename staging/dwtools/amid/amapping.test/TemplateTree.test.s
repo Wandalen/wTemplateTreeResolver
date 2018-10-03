@@ -413,7 +413,7 @@ function resolveStringToArray( test )
 
 //
 
-function onStrFrom( test )
+function resolveComplex( test )
 {
   function File( path )
   {
@@ -424,8 +424,14 @@ function onStrFrom( test )
   {
     complex1 : new File( '/a/b/c' ),
     complex2 : [ new File( '/x/y/z' ), new File( '/z/y/x' ) ],
+    complex2_1 : [ new File( '/x/y/z' ) ],
     complex3 : { file1 : new File( '/1/2/3' ), file2 : new File( '/4/5/6' ) },
     complex4 : new Date(),
+    complex5 : { file1 : '/a/b/c', file2 : '/c/b/a' },
+    complex6 : [ '/a', new Date() ],
+    complex7 : { file1 : '/a', date : new Date() },
+    complex8 : test,
+    arrayOfStrings : [ 'a', 'b' ],
   }
   var template = new wTemplateTreeResolver
   ({
@@ -442,14 +448,18 @@ function onStrFrom( test )
     return src.filePath;
 
     if( _.arrayIs( src ) )
-    return src.map( ( e ) => e instanceof File ? e.filePath : _.toStr( e ) );
+    return src.map( ( e ) => e instanceof File ? e.filePath : e );
 
     if( _.mapIs( src ) )
     for( var k in src )
-    src[ k ] = src[ k ] instanceof File ? src[ k ].filePath : _.toStr( src[ k ] );
+    src[ k ] = src[ k ] instanceof File ? src[ k ].filePath : src[ k ];
 
     return src;
   }
+
+  /* */
+
+  test.open( 'resolving single element' );
 
   var got = template.resolve( '{{complex1}}' );
   var expected = tree.complex1;
@@ -474,6 +484,12 @@ function onStrFrom( test )
   var got = template.resolve( '{{complex3.file1.filePath}}' );
   var expected = '/1/2/3';
   test.identical( got, expected );
+
+  test.close( 'resolving single element' );
+
+  /* */
+
+  test.open( 'resolving several elements with mixing' );
 
   var got = template.resolve( '{{complex1}} , {{complex1}}' );
   var expected = '/a/b/c , /a/b/c'
@@ -515,13 +531,90 @@ function onStrFrom( test )
   }
   test.identical( got, expected );
 
-  // '{{complex2}} , {{complex2}}'
-  // '{{complex3}} , {{complex3}}'
+  var got = template.resolve( '{{complex2}} , {{complex2}}' );
+  var expected =
+  [
+    '/x/y/z , /x/y/z',
+    '/z/y/x , /z/y/x',
+  ]
+  test.identical( got, expected );
 
+  var got = template.resolve( '{{complex2}} , {{arrayOfStrings}}' );
+  var expected =
+  [
+    '/x/y/z , a',
+    '/z/y/x , b',
+  ]
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex3}} , {{complex3}}' );
+  var expected =
+  {
+    file1 : '/1/2/3 , /1/2/3',
+    file2 : '/4/5/6 , /4/5/6'
+  }
+  test.identical( got, expected );
+
+  var got = template.resolve( '{{complex3}} , {{complex5}}' );
+  var expected =
+  {
+    file1 : '/1/2/3 , /a/b/c',
+    file2 : '/4/5/6 , /c/b/a'
+  }
+  test.identical( got, expected );
+
+  test.close( 'resolving several elements with mixing' );
+
+  /* */
+
+  test.open( 'resolving several elements, errors on resolve stage' );
+
+  test.case = 'complex4( Date ) can not be resolved';
   var got = template.resolve( '{{complex1}} , {{complex4}}' );
   test.is( _.errIs( got ) );
 
+  test.case = 'complex8( wTestRoutineDescriptor ) can not be resolved';
+  var got = template.resolve( '{{complex8}} , {{complex1}}' );
+  test.is( _.errIs( got ) );
 
+  test.close( 'resolving several elements, errors on resolve stage' );
+
+  /* */
+
+  if( !Config.debug )
+  return;
+
+  test.open( 'errors on join stage' );
+
+  test.case = 'try to mix array with map';
+  test.shouldThrowError( () =>
+  {
+    template.current.pop();
+    template.resolve( '{{complex2}} , {{complex3}}' );
+  })
+
+  test.case = 'try to mix two arrays of different length';
+  test.shouldThrowError( () =>
+  {
+    template.current.pop();
+    template.resolve( '{{complex2_1}} , {{complex2}}' );
+  })
+
+  test.case = 'complex6( array ) contains element of unsupported type';
+  test.shouldThrowError( () =>
+  {
+    template.current.pop();
+    template.resolve( '{{complex1}} , {{complex6}}' );
+  })
+
+  test.case = 'complex7( map ) contains element of unsupported type';
+  test.shouldThrowError( () =>
+  {
+    template.current.pop();
+    template.resolve( '{{complex1}} , {{complex7}}' );
+  })
+
+  test.close( 'errors on join stage' );
 }
 
 // --
@@ -540,7 +633,7 @@ var Self =
     query : query,
     resolve : resolve,
     resolveStringToArray : resolveStringToArray,
-    onStrFrom : onStrFrom
+    resolveComplex : resolveComplex
 
   },
 

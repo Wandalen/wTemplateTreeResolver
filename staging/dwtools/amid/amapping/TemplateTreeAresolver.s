@@ -180,6 +180,29 @@ function _resolveEntered( src )
 
 //
 
+
+function _join()
+{
+  let result = '';
+  for( var i = 0; i < arguments.length; i++ )
+  {
+    _.assert( _.strIs( arguments[ i ] ), 'Can\'t join elements:', '\n', arguments, '\n', 'Expects String, but got:', arguments[ i ] );
+    result += arguments[ i ];
+  }
+  return result;
+}
+
+let join = _.routineVectorize_functor
+({
+  routine : _join,
+  vectorizingArray : 1,
+  vectorizingMap : 1,
+  vectorizingKeys : 0,
+  select : Infinity
+})
+
+//
+
 function _resolveString( src )
 {
   let self = this;
@@ -231,7 +254,11 @@ function _resolveString( src )
       if( !_.strIs( element ) && !_.arrayIs( element ) && !_.mapIs( element ) )
       {
         debugger;
-        element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.toStrShort( element ) );
+        element = _.err
+        (
+         'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.strTypeOf( element ), '\n',
+         'Allowed types are: String, Array, Map'
+        );
         return element;
       }
     }
@@ -245,73 +272,83 @@ function _resolveString( src )
   if( rarray.length < 2 )
   return rarray[ 0 ];
 
-  /* */
+  let result;
 
-  let result = '';
-  for( let r = 0 ; r < rarray.length ; r++ )
+  try
   {
-    let element = rarray[ r ];
-    if( _.arrayIs( element ) )
-    {
-      _.sure( _.strIs( result ),'Cant mix', _.strTypeOf( [] ),'with',_.strTypeOf( result ) );
-      result = _.dup( '',element.length );
-      _.assert( result.length === element.length );
-    }
-    else if( _.mapIs( element ) )
-    {
-      _.sure( _.strIs( result ),'Cant mix', _.strTypeOf( Object.create( null ) ),'with',_.strTypeOf( result ) );
-      result = _.mapExtend( null,element );
-      for( let i in result )
-      result[ i ] = '';
-    }
-    else
-    {
-      // _.assert( _.strIs( element ) );
-    }
+    result = join.apply( self, rarray );
+  }
+  catch( err )
+  {
+    throw _.err( 'Can\'t mix elements of template:',_.strQuote( src.substring( 0,80 ) ),'\n','Elements:\n',rarray,'\n', err.message );
   }
 
   /* */
 
-  for( let r = 0 ; r < rarray.length ; r++ )
-  {
-    let element = rarray[ r ];
+  // let result = '';
+  // for( let r = 0 ; r < rarray.length ; r++ )
+  // {
+  //   let element = rarray[ r ];
+  //   if( _.arrayIs( element ) )
+  //   {
+  //     _.sure( _.strIs( result ),'Cant mix', _.strTypeOf( [] ),'with',_.strTypeOf( result ) );
+  //     result = _.dup( '',element.length );
+  //     _.assert( result.length === element.length );
+  //   }
+  //   else if( _.mapIs( element ) )
+  //   {
+  //     _.sure( _.strIs( result ),'Cant mix', _.strTypeOf( Object.create( null ) ),'with',_.strTypeOf( result ) );
+  //     result = _.mapExtend( null,element );
+  //     for( let i in result )
+  //     result[ i ] = '';
+  //   }
+  //   else
+  //   {
+  //     // _.assert( _.strIs( element ) );
+  //   }
+  // }
 
-    if( _.arrayIs( result ) )
-    {
-      for( let i = 0 ; i < result.length ; i++ )
-      if( _.arrayIs( element ) )
-      result[ i ] = join( result[ i ] , element[ i ] );
-      else
-      result[ i ] = join( result[ i ] , element );
-    }
-    else if( _.mapIs( result ) )
-    {
-      debugger;
-      for( let i in result )
-      if( _.mapIs( element ) )
-      result[ i ] = join( result[ i ] , element[ i ] );
-      else
-      result[ i ] = join( result[ i ] , element );
-    }
-    else
-    {
-      result = join( result , element );
-    }
+  /* */
 
-  }
+  // for( let r = 0 ; r < rarray.length ; r++ )
+  // {
+  //   let element = rarray[ r ];
+
+  //   if( _.arrayIs( result ) )
+  //   {
+  //     for( let i = 0 ; i < result.length ; i++ )
+  //     if( _.arrayIs( element ) )
+  //     result[ i ] = join( result[ i ] , element[ i ] );
+  //     else
+  //     result[ i ] = join( result[ i ] , element );
+  //   }
+  //   else if( _.mapIs( result ) )
+  //   {
+  //     debugger;
+  //     for( let i in result )
+  //     if( _.mapIs( element ) )
+  //     result[ i ] = join( result[ i ] , element[ i ] );
+  //     else
+  //     result[ i ] = join( result[ i ] , element );
+  //   }
+  //   else
+  //   {
+  //     result = join( result , element );
+  //   }
+
+  // }
 
   return result;
 
   /* - */
 
-  function join( result, element )
-  {
-    result += element;
-    _.assert( _.strIs( result ) );
-    _.assert( _.strIs( element ) );
-    return result;
-  }
-
+  // function join( result, element )
+  // {
+  //   result += element;
+  //   _.assert( _.strIs( result ) );
+  //   _.assert( _.strIs( element ) );
+  //   return result;
+  // }
 }
 
 //
