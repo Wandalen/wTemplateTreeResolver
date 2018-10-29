@@ -123,7 +123,7 @@ function _resolveEnter( src,query )
   let l = self.current.length;
   let node,path;
 
-  _.assert( arguments.length === 2, 'expects exactly two arguments' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
 
   if( query === '' )
   {
@@ -522,7 +522,7 @@ function _queryEntered( query )
 function _queryAct( here,query )
 {
 
-  _.assert( arguments.length === 2, 'expects exactly two arguments' );
+  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
   _.assert( query.length > 0 );
   // _.assert( query[ 0 ] === self.upSymbol || query[ 0 ] === self.downSymbol );
 
