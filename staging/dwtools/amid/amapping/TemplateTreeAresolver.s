@@ -72,7 +72,7 @@ function resolve( src )
 {
   let self = this;
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   let result = self._resolveEnter( src,'' );
 
@@ -92,7 +92,7 @@ function resolveTry( src )
 {
   let self = this;
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   let result = self._resolve( src );
 
@@ -108,7 +108,7 @@ function _resolve( src )
 {
   let self = this;
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   let result = self._resolveEnter( src,'' );
 
@@ -158,7 +158,7 @@ function _resolveEntered( src )
 {
   let self = this;
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( !self.shouldInvestigate( src ) )
   return src;
@@ -419,7 +419,7 @@ function query( query )
 {
   let self = this;
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   let result = self._queryEntering( query );
   if( result instanceof self.ErrorQuerying )
@@ -437,7 +437,7 @@ function queryTry( query )
 {
   let self = this;
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   let result = self._queryEntering( query );
   if( result instanceof self.ErrorQuerying )
@@ -453,7 +453,7 @@ function _querySplit( query )
   let self = this;
 
   _.assert( _.strIs( query ) || _.arrayIs( query ) );
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.strIs( query ) )
   {
@@ -482,7 +482,7 @@ function _queryEntering( query )
 {
   let self = this;
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
   _.assert( !self.current.length );
 
   query = self._querySplit( query );
@@ -505,7 +505,7 @@ function _queryEntered( query )
   let self = this;
 
   _.assert( _.strIs( query ) || _.arrayIs( query ) );
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   if( _.strIs( query ) )
   {
@@ -666,7 +666,7 @@ function _leave( node )
 {
   let self = this;
 
-  _.assert( arguments.length === 1, 'expects single argument' );
+  _.assert( arguments.length === 1, 'Expects single argument' );
 
   let d = self.current.pop();
 
