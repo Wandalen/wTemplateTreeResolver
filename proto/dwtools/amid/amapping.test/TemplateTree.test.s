@@ -625,6 +625,7 @@ var Self =
 {
 
   name : 'Tools/mid/TemplateTreeResolver',
+  silencing : 1,
   // verbosity : 1,
 
   tests :

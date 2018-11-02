@@ -740,7 +740,7 @@ function strFrom( src )
 
 //
 
-function entityResolve( src,tree )
+function EntityResolve( src, tree )
 {
   if( tree === undefined )
   tree = src;
@@ -800,12 +800,12 @@ let Restricts =
 let Statics =
 {
   ErrorQuerying : ErrorQuerying,
-  entityResolve : entityResolve,
+  EntityResolve : EntityResolve,
 }
 
 let Globals =
 {
-  entityResolve : entityResolve,
+  entityResolve : EntityResolve,
 }
 
 // --
@@ -849,7 +849,7 @@ let Proto =
   _errorQuerying : _errorQuerying,
   shouldInvestigate : shouldInvestigate,
   strFrom : strFrom,
-  entityResolve : entityResolve,
+  EntityResolve : EntityResolve,
 
   // shortcuts
 
