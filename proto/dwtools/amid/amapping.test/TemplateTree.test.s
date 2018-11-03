@@ -32,7 +32,7 @@ if( typeof module !== 'undefined' )
 //
 
 var _ = _global_.wTools;
-var Parent = _.Tester;
+var Parent = /*_.*/wTester;
 
 var tree =
 {
@@ -644,6 +644,6 @@ var Self =
 
 Self = wTestSuite( Self );
 if( typeof module !== 'undefined' && !module.parent )
-_.Tester.test( Self.name );
+/*_.*/wTester.test( Self.name );
 
 } )( );
