@@ -11,14 +11,14 @@
     }
   ],
   "license": "MIT",
-  "main": "staging/dwtools/amid/amapping/TemplateTreeAresolver.s",
+  "main": "proto/dwtools/amid/amapping/TemplateTreeAresolver.s",
   "files": [
-    "staging/dwtools/amid/amapping",
+    "proto/dwtools/amid/amapping",
     "production"
   ],
   "scripts": {
     "test": "wtest staging",
-    "make_doc": "./doc.sh"
+    "docgen": "wdocgen proto"
   },
   "repository": {
     "type": "git",
