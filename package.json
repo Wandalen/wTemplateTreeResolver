@@ -14,7 +14,7 @@
   "main": "proto/dwtools/amid/amapping/TemplateTreeAresolver.s",
   "files": [
     "proto/dwtools/amid/amapping",
-    "production"
+    "proto/dwtools/Tools.s", "production"
   ],
   "scripts": {
     "test": "wtest staging",
