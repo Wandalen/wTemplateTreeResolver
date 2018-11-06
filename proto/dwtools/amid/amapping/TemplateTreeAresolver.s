@@ -13,24 +13,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  if( typeof _global_ === 'undefined' || !_global_.wBase )
-  {
-    let toolsPath = '../../../dwtools/Base.s';
-    let toolsExternal = 0;
-    try
-    {
-      toolsPath = require.resolve( toolsPath );
-    }
-    catch( err )
-    {
-      toolsExternal = 1;
-      require( 'wTools' );
-    }
-    if( !toolsExternal )
-    require( toolsPath );
-  }
-
-  let _ = _global_.wTools;
+  let _ = require( '../../Tools.s' );
 
   _.include( 'wCopyable' );
 
@@ -414,6 +397,26 @@ function _resolveArray( src )
 // --
 // query
 // --
+
+// function query( o )
+// {
+//   let self = this;
+//
+//   if( _.strIs( arguments[ 0 ] ) )
+//   o = { path : arguments[ 0 ] }
+//
+//   _.assert( arguments.length === 1 );
+//   _.routineOptions( query, o );
+//
+//   debugger;
+//
+//   _.entitySelect( self.tree, o.path );
+// }
+//
+// query.defaults =
+// {
+//   path : null,
+// }
 
 function query( query )
 {
