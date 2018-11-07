@@ -31,7 +31,7 @@ var tree =
 
   regexp : [ /b/, /a{regexp\/0}/, /{regexp\/1}c/, /{atomic1}x{regexp\/0}y{regexp\/2}z/g ],
 
-  error : [ '{error.a}','{error2.0}','{../c}','{error.3}' ],
+  error : [ '{error/a}','{error2/0}','{../c}','{error/3}' ],
 
   array : [ 'a','b','c' ],
   map : { a : 'a', b : 'b', c : 'c' },
@@ -290,7 +290,7 @@ function resolve( test )
 
   test.open( 'non-string' );
 
-  var got = template.resolve( [ '{atomic1}','{atomic2}' ] );
+  var got = template.resolve( [ '{atomic1}', '{atomic2}' ] );
   var expected = [ 'a1',2 ];
   test.identical( got,expected );
 
@@ -304,15 +304,13 @@ function resolve( test )
 
   test.close( 'non-string' );
 
-  /*  xxx*/
+  /* */
 
-  // test.open( 'relative' );
+  test.open( 'relative' );
 
-  debugger;
   var got = template.resolve( '{relative/1}' );
   var expected = 'a';
   test.identical( got,expected );
-  debugger; return; xxx
 
   var got = template.resolve( '{relative/2}' );
   var expected = '0a0';
@@ -321,48 +319,6 @@ function resolve( test )
   test.close( 'relative' );
 
   /* */
-
-  test.open( 'not throwing error' );
-
-  var got = template.resolveTry( '{aa}' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.resolveTry( 'aa{aa}aa' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.resolveTry( '{error.0}' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.resolveTry( '{error.1}' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.resolveTry( '{error.2}' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.resolveTry( '{error.3}' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.resolveTry( [ '{error.3}' ] );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.resolveTry( { a : '{error.3}' } );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.resolveTry( /{error.3}/ );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  test.close( 'not throwing error' );
-
-  /**/
 
   test.open( 'resolving empty string' );
 
@@ -391,42 +347,92 @@ function resolve( test )
 
   test.shouldThrowErrorSync( function()
   {
-    template.resolve( '{error.0}' );
+    template.resolve( '{error/0}' );
   });
 
   test.shouldThrowErrorSync( function()
   {
-    template.resolve( '{error.1}' );
+    template.resolve( '{error/1}' );
   });
 
   test.shouldThrowErrorSync( function()
   {
-    template.resolve( '{error.2}' );
+    template.resolve( '{error/2}' );
   });
 
   test.shouldThrowErrorSync( function()
   {
-    template.resolve( '{error.3}' );
+    template.resolve( '{error/3}' );
   });
 
   test.shouldThrowErrorSync( function()
   {
-    template.resolve( [ '{error.3}' ] );
+    template.resolve( [ '{error/3}' ] );
   });
 
   test.shouldThrowErrorSync( function()
   {
-    template.resolve( { a : '{error.3}' } );
+    template.resolve( { a : '{error/3}' } );
   });
 
   test.shouldThrowErrorSync( function()
   {
-    template.resolve( /{error.3}/ );
+    template.resolve( /{error\/3}/ );
   });
 
   test.close( 'throwing error' );
 
   debugger;
+}
+
+//
+
+function resolveTry( test )
+{
+  var context = this;
+  var template = new wTemplateTreeResolver
+  ({
+    tree : tree,
+    prefixToken : '{',
+    postfixToken : '}',
+  });
+
+  var got = template.resolveTry( '{aa}' );
+  var expected = undefined;
+  test.identical( got, expected );
+
+  var got = template.resolveTry( 'aa{aa}aa' );
+  var expected = undefined;
+  test.identical( got,expected );
+
+  var got = template.resolveTry( '{error/0}' );
+  var expected = undefined;
+  test.identical( got,expected );
+
+  var got = template.resolveTry( '{error/1}' );
+  var expected = undefined;
+  test.identical( got,expected );
+
+  var got = template.resolveTry( '{error/2}' );
+  var expected = undefined;
+  test.identical( got,expected );
+
+  var got = template.resolveTry( '{error/3}' );
+  var expected = undefined;
+  test.identical( got,expected );
+
+  var got = template.resolveTry( [ '{error/3}' ] );
+  var expected = undefined;
+  test.identical( got,expected );
+
+  var got = template.resolveTry( { a : '{error/3}' } );
+  var expected = undefined;
+  test.identical( got,expected );
+
+  var got = template.resolveTry( /{error\/3}/ );
+  var expected = undefined;
+  test.identical( got,expected );
+
 }
 
 //
@@ -515,7 +521,7 @@ function resolveComplex( test )
   var expected = tree.complex1;
   test.identical( got, expected );
 
-  var got = template.resolve( '{{complex1.filePath}}' );
+  var got = template.resolve( '{{complex1/filePath}}' );
   var expected = '/a/b/c';
   test.identical( got, expected );
 
@@ -523,7 +529,7 @@ function resolveComplex( test )
   var expected = tree.complex2;
   test.identical( got, expected );
 
-  var got = template.resolve( '{{complex2.0.filePath}}' );
+  var got = template.resolve( '{{complex2/0/filePath}}' );
   var expected = '/x/y/z';
   test.identical( got, expected );
 
@@ -531,7 +537,7 @@ function resolveComplex( test )
   var expected = tree.complex3;
   test.identical( got, expected );
 
-  var got = template.resolve( '{{complex3.file1.filePath}}' );
+  var got = template.resolve( '{{complex3/file1/filePath}}' );
   var expected = '/1/2/3';
   test.identical( got, expected );
 
@@ -545,7 +551,7 @@ function resolveComplex( test )
   var expected = '/a/b/c , /a/b/c'
   test.identical( got, expected );
 
-  var got = template.resolve( '{{complex1.filePath}} , {{complex2.0.filePath}}' );
+  var got = template.resolve( '{{complex1/filePath}} , {{complex2/0/filePath}}' );
   var expected = '/a/b/c , /x/y/z'
   test.identical( got, expected );
 
@@ -685,6 +691,7 @@ var Self =
     queryTry : queryTry,
 
     resolve : resolve,
+    resolveTry : resolveTry,
     resolveStringToArray : resolveStringToArray,
     resolveComplex : resolveComplex
 

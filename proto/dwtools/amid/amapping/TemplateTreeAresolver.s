@@ -71,7 +71,7 @@ function resolve( src )
 
   let result = self._resolve( src );
 
-  if( result instanceof self.ErrorQuerying )
+  if( result instanceof self.ErrorLooking )
   {
     let result = self._resolve( src );
     throw _.err( result );
@@ -90,7 +90,7 @@ function resolveTry( src )
 
   let result = self._resolve( src );
 
-  if( result instanceof self.ErrorQuerying )
+  if( result instanceof self.ErrorLooking )
   return;
 
   return result;
@@ -121,36 +121,37 @@ function _resolve( src )
 function _resolveEnter( o )
 {
   let self = this;
-  let l = self.current.length;
-  let current = self.current[ l-1 ];
+  // let l = self.current.length;
+  // let current = self.current[ l-1 ];
+  let current = self.stack[ self.stack.length-1 ];
 
   _.assert( arguments.length === 1 );
   _.routineOptionsPreservingUndefines( _resolveEnter, arguments );
 
   if( o.path === null )
-  o.path = current.path;
+  o.path = current ? current.path : self.upTokenDefault();
 
-  let entered = self._enter
-  ({
-    rootContainer : o.rootContainer,
-    currentContainer : o.currentContainer,
-    subject : o.subject,
-    query : o.query,
-    path : o.path,
-    throwing : 0,
-  });
+  // let entered = self._enter
+  // ({
+  //   rootContainer : o.rootContainer,
+  //   currentContainer : o.currentContainer,
+  //   subject : o.subject,
+  //   query : o.query,
+  //   path : o.path,
+  //   throwing : 0,
+  // });
 
-  if( entered instanceof self.ErrorQuerying )
-  {
-    debugger;
-    return entered;
-  }
+  // if( entered instanceof self.ErrorLooking )
+  // {
+  //   debugger;
+  //   return entered;
+  // }
 
   let result = self._resolveEntered( o.subject );
 
-  self._leave( o.path );
+  // self._leave( o.path );
 
-  _.assert( self.current.length === l );
+  // _.assert( self.current.length === l );
 
   return result;
 }
@@ -187,7 +188,7 @@ function _resolveEntered( src )
   if( _.longIs( src ) )
   return self._resolveArray( src );
 
-  throw _.err( 'Unexpected type of src',_.strTypeOf( src ) );
+  throw _.err( 'Unexpected type of src', _.strTypeOf( src ) );
 }
 
 //
@@ -197,7 +198,9 @@ function _resolveString( src )
   let self = this;
   let r;
   let rarray = [];
-  let current = self.current[ self.current.length - 1 ];
+  let throwen = 0;
+  // let current = self.current[ self.current.length - 1 ];
+  let current = self.stack[ self.stack.length-1 ];
 
   if( src === '' )
   return src;
@@ -229,31 +232,57 @@ function _resolveString( src )
       strip = strip[ 0 ];
       element = strip;
 
-      debugger;
-      let it = self._queryAct( element );
-      debugger;
-      let element2 = it.result;
-
-      if( element !== element2 && element2 !== undefined )
+      let it;
+      try
       {
-        debugger;
-        element2 = self._resolveEnter
-        ({
-          subject : element2,
-          rootContainer : current.rootContainer,
-          currentContainer : it.lastSelect,
-          path : it.lastSelect.path,
-          query : '',
-        });
+        it = self._queryTracking( element );
       }
-      element = element2;
-      // debugger;
+      catch( err )
+      {
+        throwen = 1;
+        element = err;
+      }
+
+      if( it && it.error )
+      element = it.error;
+
+      if( it && !it.error )
+      {
+        let lit = it.lastSelect;
+        self._queryBegin( lit );
+
+        if( it.error )
+        {
+          element = it.error;
+        }
+        else
+        {
+
+          let element2 = it.result;
+          if( element !== element2 && element2 !== undefined )
+          {
+            debugger;
+            element2 = self._resolveEnter
+            ({
+              subject : element2,
+              rootContainer : current ? current.root : self.tree,
+              currentContainer : it.lastSelect.src,
+              path : it.lastSelect.path,
+              query : '',
+            });
+          }
+          element = element2;
+
+          self._queryEnd( lit );
+        }
+
+      }
 
     }
 
     _.assert( _.strIs( strip ) );
 
-    if( element instanceof self.ErrorQuerying )
+    if( element instanceof _.ErrorLooking || throwen )
     {
       debugger;
       element = _.err
@@ -262,6 +291,10 @@ function _resolveString( src )
         '\n', _.strQuote( strip ), 'is not defined', '\n',
         element
       );
+
+      if( throwen )
+      throw element
+
       return element;
     }
 
@@ -322,7 +355,7 @@ function _resolveRegexp( src )
   source = self._resolveString( source );
   debugger;
 
-  if( source instanceof self.ErrorQuerying )
+  if( source instanceof self.ErrorLooking )
   return source;
 
   if( source === src.source )
@@ -338,7 +371,8 @@ function _resolveRegexp( src )
 function _resolveMap( src )
 {
   let self = this;
-  let current = self.current[ self.current.length - 1 ];
+  // let current = self.current[ self.current.length - 1 ];
+  let current = self.stack[ self.stack.length-1 ];
   let result = Object.create( null );
 
   for( let s in src )
@@ -347,10 +381,10 @@ function _resolveMap( src )
     ({
       subject : src[ s ],
       currentContainer : src[ s ],
-      rootContainer : current.rootContainer,
+      rootContainer : current ? current.root : self.tree,
       query : s,
     });
-    if( result[ s ] instanceof self.ErrorQuerying )
+    if( result[ s ] instanceof self.ErrorLooking )
     {
       return result[ s ];
     }
@@ -364,7 +398,8 @@ function _resolveMap( src )
 function _resolveArray( src )
 {
   let self = this;
-  let current = self.current[ self.current.length - 1 ];
+  // let current = self.current[ self.current.length - 1 ];
+  let current = self.stack[ self.stack.length-1 ];
   let result = new src.constructor( src.length );
 
   for( let s = 0 ; s < src.length ; s++ )
@@ -373,11 +408,10 @@ function _resolveArray( src )
     ({
       subject : src[ s ],
       currentContainer : src[ s ],
-      rootContainer : current.rootContainer,
+      rootContainer : current ? current.root : self.tree,
       query : s,
     });
-    // result[ s ] = self._resolveEnter( src[ s ],s );
-    if( result[ s ] instanceof self.ErrorQuerying )
+    if( result[ s ] instanceof self.ErrorLooking )
     {
       return result[ s ];
     }
@@ -390,7 +424,7 @@ function _resolveArray( src )
 // query
 // --
 
-function _query_pre( routine, args )
+function query_pre( routine, args )
 {
 
   args = _.longSlice( args );
@@ -424,23 +458,27 @@ var defaults = _queryAct_body.defaults;
 
 defaults.missingAction = 'throw';
 
-let _queryAct = _.routineFromPreAndBody( _query_pre, _queryAct_body );
+let _queryAct = _.routineFromPreAndBody( query_pre, _queryAct_body );
 
 //
 
-function _query_body( o )
+function query_body( o )
 {
   let it = this._queryAct.body.call( this, o );
   return it.result;
 }
 
-_.routineExtend( _query_body, _queryAct.body );
+_.routineExtend( query_body, _queryAct.body );
 
-let query = _.routineFromPreAndBody( _query_pre, _query_body );
+let query = _.routineFromPreAndBody( query_pre, query_body );
+
+var defaults = query.defaults;
+
+query.missingAction = 'throw';
 
 //
 
-let queryTry = _.routineFromPreAndBody( _query_pre, _query_body );
+let queryTry = _.routineFromPreAndBody( query_pre, query_body );
 
 var defaults = queryTry.defaults;
 
@@ -448,129 +486,199 @@ defaults.missingAction = 'undefine';
 
 //
 
-function _queryTracking_body( o )
+function _queryTracking_pre( routine, args )
 {
   let self = this;
-  let it = this._queryAct.body.call( this, o );
+  let current = self.stack[ self.stack.length-1 ];
 
-  debugger;
-  self.stack.push( o.iteration.lastSelect );
-  debugger;
+  args = _.longSlice( args );
 
-  return it.result;
+  let o = args[ 0 ]
+  if( _.strIs( o ) )
+  o = { query : o }
+
+  o.container = this.tree;
+  o.downToken = this.downToken;
+  o.upToken = this.upToken;
+
+  if( _.strBegins( o.query, [ '..', '.' ] ) )
+  {
+    debugger;
+    _.sure( !!current, 'Cant resolve', () => _.strQuote( o.query ) + ' no current!' );
+    o.it = current.iteration();
+    o.container = null;
+  }
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+
+  return _.entitySelect.pre.call( this, routine, [ o ] );
+}
+
+//
+
+function _queryTracking_body( it )
+{
+  let self = this;
+  this._queryAct.body.call( this, it );
+  // self.stack.push( it.lastSelect );
+  return it;
 }
 
 _.routineExtend( _queryTracking_body, _queryAct.body );
 
-let _queryTracking = _.routineFromPreAndBody( _query_pre, _queryTracking_body );
+let _queryTracking = _.routineFromPreAndBody( _queryTracking_pre, _queryTracking_body );
+
+_.assert( _queryTracking.defaults.missingAction === 'throw' );
+_queryTracking.defaults.missingAction = 'error';
+_.assert( _queryTracking.defaults.missingAction === 'error' );
+
+//
+
+function _queryBegin( it )
+{
+  let self = this;
+
+  debugger;
+  let found = _.entityFilter( self.stack, { src : it.src } );
+
+  if( found.length )
+  {
+    debugger;
+    it.iterator.error = _.ErrorLooking
+    (
+      'Dead lock', _.strQuote( it.context.query ),
+      '\nbecause', _.strQuote( _.path.join.apply( _.path, it.apath ) ), 'does not exist',
+      '\nat', _.strQuote( it.path ),
+      '\nin container', _.toStr( it.context.container )
+    );
+    return it.iterator.error;
+  }
+
+  self.stack.push( it );
+  return it;
+}
+
+//
+
+function _queryEnd( it )
+{
+  let self = this;
+  let pit = self.stack.pop();
+  _.assert( pit === it );
+  return it;
+}
 
 // --
 // tracker
 // --
 
-function _entryGet( entry )
-{
-  let self = this;
-  let result = _.entityFilter( self.current, entry );
-  return result;
-}
-
+// function _entryGet( entry )
+// {
+//   let self = this;
+//   let result = _.entityFilter( self.current, entry );
+//   return result;
+// }
 //
-
-function _enter( o )
-{
-  let self = this;
-  let newPath;
-
-  _.routineOptionsPreservingUndefines( _enter, arguments );
-  _.assert( arguments.length === 1 );
-  _.assert( _.strIs( o.query ) || _.numberIs( o.query ) );
-
-  let upToken = self.upTokenDefault();
-  if( o.path === '' )
-  newPath = upToken;
-  else if( o.path === upToken )
-  newPath = o.path + o.query;
-  else if( o.query )
-  newPath = o.path + upToken + o.query;
-  else
-  newPath = o.path;
-
-  let d = Object.create( null );
-  d.rootContainer = o.rootContainer;
-  d.currentContainer = o.currentContainer;
-  d.subject = o.subject;
-  d.path = o.path;
-  d.newPath = newPath;
-  d.query = o.query;
-
-  _.assert( _.strIs( d.path ) );
-  _.assert( _.strIs( d.newPath ) );
-
-  if( o.query )
-  if( self._entryGet({ path : o.path, rootContainer : o.rootContainer }).length )
-  {
-    let err = self._errorQuerying({ reason : 'dead cycle', at : newPath, query : d.query });;
-    if( o.throwing )
-    throw err;
-    else
-    return err;
-  }
-
-  self.current.push( d );
-
-  return d;
-}
-
-_enter.defaults =
-{
-  rootContainer : null,
-  currentContainer : null,
-  subject : null,
-  query : null,
-  path : null,
-  throwing : 0,
-}
-
+// //
 //
-
-function _leave( path )
-{
-  let self = this;
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-
-  let d = self.current.pop();
-
-  _.assert( d.path === path );
-
-  return d;
-}
+// function _enter( o )
+// {
+//   let self = this;
+//   let newPath;
+//
+//   _.routineOptionsPreservingUndefines( _enter, arguments );
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.strIs( o.query ) || _.numberIs( o.query ) );
+//
+//   let upToken = self.upTokenDefault();
+//   if( o.path === '' )
+//   newPath = upToken;
+//   else if( o.path === upToken )
+//   newPath = o.path + o.query;
+//   else if( o.query )
+//   newPath = o.path + upToken + o.query;
+//   else
+//   newPath = o.path;
+//
+//   let d = Object.create( null );
+//   d.rootContainer = o.rootContainer;
+//   d.currentContainer = o.currentContainer;
+//   d.subject = o.subject;
+//   d.path = o.path;
+//   d.newPath = newPath;
+//   d.query = o.query;
+//
+//   _.assert( _.strIs( d.path ) );
+//   _.assert( _.strIs( d.newPath ) );
+//
+//   // if( o.query )
+//   // if( self._entryGet({ path : o.path, rootContainer : o.rootContainer }).length )
+//   // {
+//   //   debugger;
+//   //   let err = self._errorQuerying({ reason : 'dead cycle', at : newPath, query : d.query });;
+//   //   if( o.throwing )
+//   //   throw err;
+//   //   else
+//   //   return err;
+//   // }
+//
+//   self.current.push( d );
+//
+//   return d;
+// }
+//
+// _enter.defaults =
+// {
+//   rootContainer : null,
+//   currentContainer : null,
+//   subject : null,
+//   query : null,
+//   path : null,
+//   throwing : 0,
+// }
+//
+// //
+//
+// function _leave( path )
+// {
+//   let self = this;
+//
+//   _.assert( arguments.length === 1, 'Expects single argument' );
+//
+//   let d = self.current.pop();
+//
+//   _.assert( d.path === path );
+//
+//   return d;
+// }
 
 // --
 // etc
 // --
 
-function ErrorQuerying( o )
-{
-  _.mapExtend( this, o );
-}
-
-ErrorQuerying.prototype = Object.create( Error.prototype );
-ErrorQuerying.prototype.constructor = ErrorQuerying;
-ErrorQuerying.prototype.name = 'x';
-
+// function ErrorLooking( o )
+// {
+//   _.mapExtend( this, o );
+// }
 //
+// ErrorLooking.prototype = Object.create( Error.prototype );
+// ErrorLooking.prototype.constructor = ErrorLooking;
+//
+// //
+//
+// function _errorQuerying( o )
+// {
+//   let err = new ErrorLooking( o );
+//   err = _.err( err );
+//   _.assert( err instanceof Error );
+//   _.assert( err instanceof ErrorLooking );
+//   _.assert( !!err.stack );
+//   return err;
+// }
 
-function _errorQuerying( o )
-{
-  let err = new ErrorQuerying( o );
-  err = _.err( err );
-  _.assert( err instanceof Error );
-  _.assert( err instanceof ErrorQuerying );
-  _.assert( !!err.stack );
-  return err;
-}
+let ErrorLooking = _.ErrorLooking;
+_.assert( _.routineIs( ErrorLooking ) );
 
 //
 
@@ -690,7 +798,7 @@ let Composes =
   investigatingRegexp : true,
   investigatingArrayLike : true,
 
-  current : _.define.own([]),
+  // current : _.define.own([]),
   stack : _.define.own([]),
 
   prefixToken : '{{',
@@ -714,7 +822,7 @@ let Restricts =
 
 let Statics =
 {
-  ErrorQuerying : ErrorQuerying,
+  ErrorLooking : ErrorLooking,
   EntityResolve : EntityResolve,
 }
 
@@ -751,17 +859,20 @@ let Proto =
   _queryAct : _queryAct,
   query : query,
   queryTry : queryTry,
+
   _queryTracking : _queryTracking,
+  _queryBegin : _queryBegin,
+  _queryEnd : _queryEnd,
 
   // tracker
 
-  _entryGet : _entryGet,
-  _enter : _enter,
-  _leave : _leave,
+  // _entryGet : _entryGet,
+  // _enter : _enter,
+  // _leave : _leave,
 
   // etc
 
-  _errorQuerying : _errorQuerying,
+  // _errorQuerying : _errorQuerying,
   shouldInvestigate : shouldInvestigate,
   strFrom : strFrom,
   _strJoin : _strJoin,
