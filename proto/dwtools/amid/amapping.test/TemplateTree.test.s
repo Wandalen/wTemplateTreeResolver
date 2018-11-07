@@ -23,13 +23,13 @@ var tree =
 
   atomic1 : 'a1',
   atomic2 : 2,
-  branch1 : { a : 1, b : 'b', c : /xx/, d : '{atomic1}', e : '{atomic2}', f : '{branch2.0}', g :'{branch2.5}' },
-  branch2 : [ 11,'bb',/yy/,'{atomic1}','{atomic2}','{branch1.a}','{branch1.f}' ],
-  branch3 : [ 'a{atomic1}c','a{branch1.b}c','a{branch3.1}c','x{branch3.0}y{branch3.1}{branch3.2}z','{branch3.0}x{branch3.1}y{branch3.2}' ],
+  branch1 : { a : 1, b : 'b', c : /xx/, d : '{atomic1}', e : '{atomic2}', f : '{branch2/0}', g :'{branch2/5}' },
+  branch2 : [ 11,'bb',/yy/,'{atomic1}','{atomic2}','{branch1/a}','{branch1/f}' ],
+  branch3 : [ 'a{atomic1}c','a{branch1/b}c','a{branch3/1}c','x{branch3/0}y{branch3/1}{branch3/2}z','{branch3/0}x{branch3/1}y{branch3/2}' ],
 
-  relative : [ 'a','{../0}','0{../1}0' ],
+  relative : [ 'a', '{../0}', '0{../1}0' ],
 
-  regexp : [ /b/,/a{regexp.0}/,/{regexp.1}c/,/{atomic1}x{regexp.0}y{regexp.2}z/g ],
+  regexp : [ /b/, /a{regexp\/0}/, /{regexp\/1}c/, /{atomic1}x{regexp\/0}y{regexp\/2}z/g ],
 
   error : [ '{error.a}','{error2.0}','{../c}','{error.3}' ],
 
@@ -47,113 +47,16 @@ var tree =
 // test
 // --
 
-function query2( test )
-{
-  var context = this;
-  var template = new wTemplateTreeResolver({ tree : tree, prefixSymbol : '{', postfixSymbol : '}', upSymbol : '.' });
-
-  /* */
-
-  var got = template.query2( 'atomic1' );
-  var expected = 'a1';
-  test.identical( got,expected );
-
-  var got = template.query2( 'atomic2' );
-  var expected = 2;
-  test.identical( got,expected );
-
-  /* */
-
-  var got = template.query2( 'branch1.a' );
-  var expected = 1;
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch1.b' );
-  var expected = 'b';
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch1.c' );
-  var expected = /xx/;
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch1.d' );
-  var expected = 'a1';
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch1.e' );
-  var expected = 2;
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch1.f' );
-  var expected = 11;
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch1.g' );
-  var expected = 1;
-  test.identical( got,expected );
-
-  /* */
-
-  var got = template.query2( 'branch2.0' );
-  var expected = 11;
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch2.1' );
-  var expected = 'bb';
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch2.2' );
-  var expected = /yy/;
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch2.3' );
-  var expected = 'a1';
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch2.4' );
-  var expected = 2;
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch2.5' );
-  var expected = 1;
-  test.identical( got,expected );
-
-  var got = template.query2( 'branch2.6' );
-  var expected = 11;
-  test.identical( got,expected );
-
-  /* */
-
-  test.case = 'error';
-
-  var got = template.queryTry( 'aa' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.queryTry( 'error.0' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.queryTry( 'error.1' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.queryTry( 'error.2' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-  var got = template.queryTry( 'error.3' );
-  var expected = undefined;
-  test.identical( got,expected );
-
-}
-
-//
-
 function query( test )
 {
   var context = this;
-  var template = new wTemplateTreeResolver({ tree : tree, prefixSymbol : '{', postfixSymbol : '}', upSymbol : '.' });
+  var template = new wTemplateTreeResolver
+  ({
+    tree : tree,
+    prefixToken : '{',
+    postfixToken : '}',
+    // upToken : '/',
+  });
 
   /* */
 
@@ -167,85 +70,126 @@ function query( test )
 
   /* */
 
-  var got = template.query( 'branch1.a' );
+  var got = template.query( 'branch1/a' );
   var expected = 1;
   test.identical( got,expected );
 
-  var got = template.query( 'branch1.b' );
+  var got = template.query( 'branch1/b' );
   var expected = 'b';
   test.identical( got,expected );
 
-  var got = template.query( 'branch1.c' );
+  var got = template.query( 'branch1/c' );
   var expected = /xx/;
   test.identical( got,expected );
 
-  var got = template.query( 'branch1.d' );
+  var got = template.query( 'branch1/d' );
   var expected = 'a1';
+  var expected = '{atomic1}';
   test.identical( got,expected );
 
-  var got = template.query( 'branch1.e' );
+  var got = template.query( 'branch1/e' );
   var expected = 2;
+  var expected = '{atomic2}';
   test.identical( got,expected );
 
-  var got = template.query( 'branch1.f' );
+  var got = template.query( 'branch1/f' );
   var expected = 11;
+  var expected = '{branch2/0}';
   test.identical( got,expected );
 
-  var got = template.query( 'branch1.g' );
+  var got = template.query( 'branch1/g' );
   var expected = 1;
+  var expected = '{branch2/5}';
   test.identical( got,expected );
 
-  /* */
-
-  var got = template.query( 'branch2.0' );
+  var got = template.query( 'branch2/0' );
   var expected = 11;
   test.identical( got,expected );
 
-  var got = template.query( 'branch2.1' );
+  var got = template.query( 'branch2/1' );
   var expected = 'bb';
   test.identical( got,expected );
 
-  var got = template.query( 'branch2.2' );
+  var got = template.query( 'branch2/2' );
   var expected = /yy/;
   test.identical( got,expected );
 
-  var got = template.query( 'branch2.3' );
+  var got = template.query( 'branch2/3' );
   var expected = 'a1';
+  var expected = '{atomic1}';
   test.identical( got,expected );
 
-  var got = template.query( 'branch2.4' );
+  var got = template.query( 'branch2/4' );
   var expected = 2;
+  var expected = '{atomic2}';
   test.identical( got,expected );
 
-  var got = template.query( 'branch2.5' );
+  var got = template.query( 'branch2/5' );
   var expected = 1;
+  var expected = '{branch1/a}';
   test.identical( got,expected );
 
-  var got = template.query( 'branch2.6' );
+  var got = template.query( 'branch2/6' );
   var expected = 11;
+  var expected = '{branch1/f}';
   test.identical( got,expected );
 
   /* */
 
-  test.case = 'error';
+  var got = template.query( 'regexp/0' );
+  var expected = 11;
+  var expected = /b/;
+  test.identical( got,expected );
+
+  var got = template.query( 'regexp/1' );
+  var expected = /ab/;
+  var expected = /a{regexp\/0}/;
+  test.identical( got,expected );
+
+  /* */
+
+  test.open( 'throwing' );
+
+  test.shouldThrowErrorSync( () => template.query( 'regexp/99' ) );
+  test.shouldThrowErrorSync( () => template.query( 'regexp/xx' ) );
+  test.shouldThrowErrorSync( () => template.query( /a{regexp\/0}/ ) );
+  test.shouldThrowErrorSync( () => template.query( [] ) );
+
+  test.close( 'throwing' );
+}
+
+//
+
+function queryTry( test )
+{
+  var context = this;
+  var template = new wTemplateTreeResolver
+  ({
+    tree : tree,
+    prefixToken : '{',
+    postfixToken : '}',
+    // upToken : '/',
+  });
+
+  /* */
 
   var got = template.queryTry( 'aa' );
   var expected = undefined;
   test.identical( got,expected );
 
-  var got = template.queryTry( 'error.0' );
+  var got = template.queryTry( 'nothing/0' );
   var expected = undefined;
   test.identical( got,expected );
 
-  var got = template.queryTry( 'error.1' );
+  var got = template.queryTry( 'nothing/1' );
   var expected = undefined;
   test.identical( got,expected );
 
-  var got = template.queryTry( 'error.2' );
+  var got = template.queryTry( 'nothing/2' );
   var expected = undefined;
   test.identical( got,expected );
 
-  var got = template.queryTry( 'error.3' );
+  var got = template.queryTry( 'nothing/3' );
   var expected = undefined;
   test.identical( got,expected );
 
@@ -259,14 +203,14 @@ function resolve( test )
   var template = new wTemplateTreeResolver
   ({
     tree : tree,
-    prefixSymbol : '{',
-    postfixSymbol : '}',
-    upSymbol : '.'
+    prefixToken : '{',
+    postfixToken : '}',
+    // upToken : '/',
   });
 
   /* */
 
-  test.case = 'trivial cases';
+  test.open( 'trivial cases' );
 
   var got = template.resolve( 'atomic1' );
   var expected = 'atomic1';
@@ -288,57 +232,63 @@ function resolve( test )
   var expected = 2;
   test.identical( got,expected );
 
+  test.close( 'trivial cases' );
+
   /* */
 
-  test.case = 'complex cases';
+  test.open( 'complex cases' );
 
-  var got = template.resolve( '{branch3.0}' );
+  var got = template.resolve( '{branch3/0}' );
   var expected = 'aa1c';
   test.identical( got,expected );
 
-  var got = template.resolve( '{branch3.1}' );
+  var got = template.resolve( '{branch3/1}' );
   var expected = 'abc';
   test.identical( got,expected );
 
-  var got = template.resolve( '{branch3.2}' );
+  var got = template.resolve( '{branch3/2}' );
   var expected = 'aabcc';
   test.identical( got,expected );
 
-  var got = template.resolve( '0{branch3.3}0' );
+  var got = template.resolve( '0{branch3/3}0' );
   var expected = '0xaa1cyabcaabccz0';
   test.identical( got,expected );
 
-  var got = template.resolve( '0{branch3.4}0' );
+  var got = template.resolve( '0{branch3/4}0' );
   var expected = '0aa1cxabcyaabcc0';
   test.identical( got,expected );
 
+  test.close( 'complex cases' );
+
   /* */
 
-  test.case = 'regexp cases';
+  test.open( 'regexp cases' );
 
-  var got = template.resolve( '{regexp.0}' );
+  var got = template.resolve( '{regexp/0}' );
   var expected = /b/;
   test.identical( got,expected );
 
-  var got = template.resolve( '{regexp.1}' );
+  var got = template.resolve( '{regexp/1}' );
   var expected = /ab/;
   test.identical( got,expected );
 
-  var got = template.resolve( '{regexp.2}' );
+  var got = template.resolve( '{regexp/2}' );
   var expected = /abc/;
   test.identical( got,expected );
 
-  var got = template.resolve( '{regexp.3}' );
+  var got = template.resolve( '{regexp/3}' );
   var expected = /a1xbyabcz/g;
   test.identical( got,expected );
 
-  var got = template.resolve( /0{regexp.3}0/ );
+  var got = template.resolve( /0{regexp\/3}0/ );
   var expected = /0a1xbyabcz0/;
   test.identical( got,expected );
 
+  test.close( 'regexp cases' );
+
   /* */
 
-  test.case = 'non-string';
+  test.open( 'non-string' );
 
   var got = template.resolve( [ '{atomic1}','{atomic2}' ] );
   var expected = [ 'a1',2 ];
@@ -352,22 +302,27 @@ function resolve( test )
   var expected = [ 11,'bb',/yy/,'a1',2,1,11 ];
   test.identical( got,expected );
 
-  /* */
+  test.close( 'non-string' );
 
-  test.case = 'relative';
+  /*  xxx*/
 
-  var got = template.query( 'relative.1' );
-  var got = template.resolve( '{relative.1}' );
+  // test.open( 'relative' );
+
+  debugger;
+  var got = template.resolve( '{relative/1}' );
   var expected = 'a';
   test.identical( got,expected );
+  debugger; return; xxx
 
-  var got = template.resolve( '{relative.2}' );
+  var got = template.resolve( '{relative/2}' );
   var expected = '0a0';
   test.identical( got,expected );
 
+  test.close( 'relative' );
+
   /* */
 
-  test.case = 'not throwing error';
+  test.open( 'not throwing error' );
 
   var got = template.resolveTry( '{aa}' );
   var expected = undefined;
@@ -405,17 +360,22 @@ function resolve( test )
   var expected = undefined;
   test.identical( got,expected );
 
+  test.close( 'not throwing error' );
+
   /**/
 
-  test.case = 'resolving empty string';
+  test.open( 'resolving empty string' );
 
   var got = template.resolve( '{resolveEmptyString}' );
   var expected = '';
   test.identical( got,expected );
 
+  test.close( 'resolving empty string' );
+
   /* */
 
-  test.case = 'throwing error';
+  test.open( 'throwing error' );
+
   if( !Config.debug )
   return;
 
@@ -464,6 +424,8 @@ function resolve( test )
     template.resolve( /{error.3}/ );
   });
 
+  test.close( 'throwing error' );
+
   debugger;
 }
 
@@ -475,9 +437,9 @@ function resolveStringToArray( test )
   var template = new wTemplateTreeResolver
   ({
     tree : tree,
-    prefixSymbol : '{',
-    postfixSymbol : '}',
-    upSymbol : '.'
+    prefixToken : '{',
+    postfixToken : '}',
+    // upToken : '/',
   });
 
   /* */
@@ -520,13 +482,14 @@ function resolveComplex( test )
     complex8 : test,
     arrayOfStrings : [ 'a', 'b' ],
   }
+
   var template = new wTemplateTreeResolver
   ({
     tree : tree,
-    prefixSymbol : '{{',
-    postfixSymbol : '}}',
+    prefixToken : '{{',
+    postfixToken : '}}',
     onStrFrom : onStrFrom,
-    upSymbol : '.'
+    // upToken : '/',
   });
 
   function onStrFrom( src )
@@ -718,9 +681,9 @@ var Self =
   tests :
   {
 
-    query2 : query2,
-
     query : query,
+    queryTry : queryTry,
+
     resolve : resolve,
     resolveStringToArray : resolveStringToArray,
     resolveComplex : resolveComplex

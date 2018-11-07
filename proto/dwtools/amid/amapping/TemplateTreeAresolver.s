@@ -51,18 +51,29 @@ function init( o )
 // resolve
 // --
 
+function resolveString( src )
+{
+  let self = this;
+
+  _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( _.strIs( src ) );
+
+  return self.resolve( self.prefixToken + srcStr + self.postfixSymbo );
+}
+
+//
+
 function resolve( src )
 {
   let self = this;
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  let result = self._resolveEnter( src,'' );
+  let result = self._resolve( src );
 
   if( result instanceof self.ErrorQuerying )
   {
-    debugger;
-    let result = self._resolveEnter( src,'' );
+    let result = self._resolve( src );
     throw _.err( result );
   }
 
@@ -93,46 +104,64 @@ function _resolve( src )
 
   _.assert( arguments.length === 1, 'Expects single argument' );
 
-  let result = self._resolveEnter( src,'' );
+  let result = self._resolveEnter
+  ({
+    subject : src,
+    rootContainer : self.tree,
+    currentContainer : self.tree,
+    query : '',
+    path : self.upTokenDefault(),
+  });
 
   return result;
 }
 
 //
 
-function _resolveEnter( src,query )
+function _resolveEnter( o )
 {
   let self = this;
   let l = self.current.length;
-  let node,path;
+  let current = self.current[ l-1 ];
 
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
+  _.assert( arguments.length === 1 );
+  _.routineOptionsPreservingUndefines( _resolveEnter, arguments );
 
-  if( query === '' )
-  {
-    _.assert( l === 0 );
-    node = self.tree;
-    path = self.upSymbol;
-  }
-  else
-  {
-    node = src;
-    path = self.current[ self.current.length-1 ].path;
-  }
+  if( o.path === null )
+  o.path = current.path;
 
-  let entered = self._enter( node,[ query ],path,0 );
+  let entered = self._enter
+  ({
+    rootContainer : o.rootContainer,
+    currentContainer : o.currentContainer,
+    subject : o.subject,
+    query : o.query,
+    path : o.path,
+    throwing : 0,
+  });
+
   if( entered instanceof self.ErrorQuerying )
   {
     debugger;
     return entered;
   }
 
-  let result = self._resolveEntered( src );
+  let result = self._resolveEntered( o.subject );
 
-  self._leave( node );
+  self._leave( o.path );
+
   _.assert( self.current.length === l );
 
   return result;
+}
+
+_resolveEnter.defaults =
+{
+  subject : null,
+  rootContainer : null,
+  currentContainer : null,
+  query : null,
+  path : null,
 }
 
 //
@@ -158,31 +187,8 @@ function _resolveEntered( src )
   if( _.longIs( src ) )
   return self._resolveArray( src );
 
-  throw _.err( 'repalce : unexpected type of src',_.strTypeOf( src ) );
+  throw _.err( 'Unexpected type of src',_.strTypeOf( src ) );
 }
-
-//
-
-
-function _join()
-{
-  let result = '';
-  for( var i = 0; i < arguments.length; i++ )
-  {
-    _.assert( _.strIs( arguments[ i ] ), 'Can\'t join elements:', '\n', arguments, '\n', 'Expects String, but got:', arguments[ i ] );
-    result += arguments[ i ];
-  }
-  return result;
-}
-
-let join = _.routineVectorize_functor
-({
-  routine : _join,
-  vectorizingArray : 1,
-  vectorizingMap : 1,
-  vectorizingKeys : 0,
-  select : Infinity
-})
 
 //
 
@@ -191,19 +197,20 @@ function _resolveString( src )
   let self = this;
   let r;
   let rarray = [];
+  let current = self.current[ self.current.length - 1 ];
 
   if( src === '' )
   return src;
 
-  let optionsForExtract =
+  let o2 =
   {
     src : src,
-    prefix : self.prefixSymbol,
-    postfix : self.postfixSymbol,
+    prefix : self.prefixToken,
+    postfix : self.postfixToken,
     onInlined : function( src ){ return [ src ]; },
   }
 
-  let strips = _.strExtractInlinedStereo( optionsForExtract );
+  let strips = _.strExtractInlinedStereo( o2 );
 
   /* */
 
@@ -218,32 +225,61 @@ function _resolveString( src )
     }
     else
     {
-      element = self._queryEntered( strip[ 0 ] );
+      _.assert( strip.length === 1 );
+      strip = strip[ 0 ];
+      element = strip;
+
+      debugger;
+      let it = self._queryAct( element );
+      debugger;
+      let element2 = it.result;
+
+      if( element !== element2 && element2 !== undefined )
+      {
+        debugger;
+        element2 = self._resolveEnter
+        ({
+          subject : element2,
+          rootContainer : current.rootContainer,
+          currentContainer : it.lastSelect,
+          path : it.lastSelect.path,
+          query : '',
+        });
+      }
+      element = element2;
+      // debugger;
+
     }
 
-    if( _.arrayIs( strip ) )
-    strip = strip[ 0 ];
+    _.assert( _.strIs( strip ) );
 
     if( element instanceof self.ErrorQuerying )
     {
       debugger;
-      element = _.err( 'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is not defined', '\n', element );
+      element = _.err
+      (
+        'Cant resolve', _.strQuote( src.substring( 0,80 ) ),
+        '\n', _.strQuote( strip ), 'is not defined', '\n',
+        element
+      );
       return element;
     }
 
     if( strips.length > 1 )
     {
-      element = self.strFrom( element );
-      if( !_.strIs( element ) && !_.arrayIs( element ) && !_.mapIs( element ) )
+      _.assert( element !== undefined );
+      let element2 = self.strFrom( element );
+      if( !_.strIs( element2 ) && !_.arrayIs( element2 ) && !_.mapIs( element2 ) )
       {
         debugger;
-        element = _.err
+        element2 = _.err
         (
-         'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.strTypeOf( element ), '\n',
+         'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.strTypeOf( element2 ), '\n',
          'Allowed types are: String, Array, Map'
         );
-        return element;
+        return element2;
       }
+      element = element2;
     }
 
     rarray.push( element );
@@ -252,86 +288,25 @@ function _resolveString( src )
 
   /* */
 
-  if( rarray.length < 2 )
+  if( rarray.length <= 1 )
   return rarray[ 0 ];
 
   let result;
 
   try
   {
-    result = join.apply( self, rarray );
+    result = self.strJoin.apply( self, rarray );
   }
   catch( err )
   {
-    throw _.err( 'Can\'t mix elements of template:',_.strQuote( src.substring( 0,80 ) ),'\n','Elements:\n',rarray,'\n', err.message );
+    throw _.err
+    (
+      'Can\'t mix different elements of template :', _.strQuote( src.substring( 0,80 ) ),
+      '\n','Elements:\n',rarray,'\n', err.message
+    );
   }
 
-  /* */
-
-  // let result = '';
-  // for( let r = 0 ; r < rarray.length ; r++ )
-  // {
-  //   let element = rarray[ r ];
-  //   if( _.arrayIs( element ) )
-  //   {
-  //     _.sure( _.strIs( result ),'Cant mix', _.strTypeOf( [] ),'with',_.strTypeOf( result ) );
-  //     result = _.dup( '',element.length );
-  //     _.assert( result.length === element.length );
-  //   }
-  //   else if( _.mapIs( element ) )
-  //   {
-  //     _.sure( _.strIs( result ),'Cant mix', _.strTypeOf( Object.create( null ) ),'with',_.strTypeOf( result ) );
-  //     result = _.mapExtend( null,element );
-  //     for( let i in result )
-  //     result[ i ] = '';
-  //   }
-  //   else
-  //   {
-  //     // _.assert( _.strIs( element ) );
-  //   }
-  // }
-
-  /* */
-
-  // for( let r = 0 ; r < rarray.length ; r++ )
-  // {
-  //   let element = rarray[ r ];
-
-  //   if( _.arrayIs( result ) )
-  //   {
-  //     for( let i = 0 ; i < result.length ; i++ )
-  //     if( _.arrayIs( element ) )
-  //     result[ i ] = join( result[ i ] , element[ i ] );
-  //     else
-  //     result[ i ] = join( result[ i ] , element );
-  //   }
-  //   else if( _.mapIs( result ) )
-  //   {
-  //     debugger;
-  //     for( let i in result )
-  //     if( _.mapIs( element ) )
-  //     result[ i ] = join( result[ i ] , element[ i ] );
-  //     else
-  //     result[ i ] = join( result[ i ] , element );
-  //   }
-  //   else
-  //   {
-  //     result = join( result , element );
-  //   }
-
-  // }
-
   return result;
-
-  /* - */
-
-  // function join( result, element )
-  // {
-  //   result += element;
-  //   _.assert( _.strIs( result ) );
-  //   _.assert( _.strIs( element ) );
-  //   return result;
-  // }
 }
 
 //
@@ -343,7 +318,9 @@ function _resolveRegexp( src )
   _.assert( _.regexpIs( src ) );
 
   let source = src.source;
+  debugger;
   source = self._resolveString( source );
+  debugger;
 
   if( source instanceof self.ErrorQuerying )
   return source;
@@ -351,7 +328,7 @@ function _resolveRegexp( src )
   if( source === src.source )
   return src;
 
-  src = new RegExp( source,src.flags );
+  src = new RegExp( source, src.flags );
 
   return src;
 }
@@ -361,11 +338,18 @@ function _resolveRegexp( src )
 function _resolveMap( src )
 {
   let self = this;
+  let current = self.current[ self.current.length - 1 ];
   let result = Object.create( null );
 
   for( let s in src )
   {
-    result[ s ] = self._resolveEnter( src[ s ],s );
+    result[ s ] = self._resolveEnter
+    ({
+      subject : src[ s ],
+      currentContainer : src[ s ],
+      rootContainer : current.rootContainer,
+      query : s,
+    });
     if( result[ s ] instanceof self.ErrorQuerying )
     {
       return result[ s ];
@@ -380,11 +364,19 @@ function _resolveMap( src )
 function _resolveArray( src )
 {
   let self = this;
+  let current = self.current[ self.current.length - 1 ];
   let result = new src.constructor( src.length );
 
   for( let s = 0 ; s < src.length ; s++ )
   {
-    result[ s ] = self._resolveEnter( src[ s ],s );
+    result[ s ] = self._resolveEnter
+    ({
+      subject : src[ s ],
+      currentContainer : src[ s ],
+      rootContainer : current.rootContainer,
+      query : s,
+    });
+    // result[ s ] = self._resolveEnter( src[ s ],s );
     if( result[ s ] instanceof self.ErrorQuerying )
     {
       return result[ s ];
@@ -408,217 +400,69 @@ function _query_pre( routine, args )
   o = { query : o }
 
   o.container = this.tree;
-  o.downSymbol = this.downSymbol;
-  o.upSymbol = this.upSymbol;
+  o.downToken = this.downToken;
+  o.upToken = this.upToken;
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  debugger;
-
   return _.entitySelect.pre.call( this, routine, [ o ] );
 }
 
+//
+
+function _queryAct_body( it )
+{
+  let self = this;
+  let result = _.entitySelect.body.call( _, it );
+  return it;
+}
+
+_.routineExtend( _queryAct_body, _.entitySelect.body );
+
+var defaults = _queryAct_body.defaults;
+
+defaults.missingAction = 'throw';
+
+let _queryAct = _.routineFromPreAndBody( _query_pre, _queryAct_body );
+
+//
+
 function _query_body( o )
 {
-  return _.entitySelect.body.call( _, o );
+  let it = this._queryAct.body.call( this, o );
+  return it.result;
 }
 
-_.routineExtend( _query_body, _.entitySelect.body );
+_.routineExtend( _query_body, _queryAct.body );
 
-let query2 = _.routineFromPreAndBody( _query_pre, _query_body );
+let query = _.routineFromPreAndBody( _query_pre, _query_body );
 
 //
 
-function query( query )
-{
-  let self = this;
+let queryTry = _.routineFromPreAndBody( _query_pre, _query_body );
 
-  _.assert( arguments.length === 1, 'Expects single argument' );
+var defaults = queryTry.defaults;
 
-  let result = self._queryEntering( query );
-  if( result instanceof self.ErrorQuerying )
-  {
-    debugger;
-    throw _.err( result,'\nquery :',query );
-  }
-
-  return result;
-}
+defaults.missingAction = 'undefine';
 
 //
 
-function queryTry( query )
+function _queryTracking_body( o )
 {
   let self = this;
+  let it = this._queryAct.body.call( this, o );
 
-  _.assert( arguments.length === 1, 'Expects single argument' );
+  debugger;
+  self.stack.push( o.iteration.lastSelect );
+  debugger;
 
-  let result = self._queryEntering( query );
-  if( result instanceof self.ErrorQuerying )
-  return;
-
-  return result;
+  return it.result;
 }
 
-//
+_.routineExtend( _queryTracking_body, _queryAct.body );
 
-function _querySplit( query )
-{
-  let self = this;
-
-  _.assert( _.strIs( query ) || _.arrayIs( query ) );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-
-  if( _.strIs( query ) )
-  {
-
-    /* query = query.split( self.upSymbol ); */
-
-    query = _.strSplit
-    ({
-      src : query,
-      delimeter : [ self.upSymbol, self.downSymbol ],
-      preservingDelimeters : 1,
-      preservingEmpty : 0,
-    });
-
-    if( query[ 0 ] !== self.downSymbol && query[ 0 ] !== self.upSymbol )
-    query.unshift( self.upSymbol );
-
-  }
-
-  return query;
-}
-
-//
-
-function _queryEntering( query )
-{
-  let self = this;
-
-  _.assert( arguments.length === 1, 'Expects single argument' );
-  _.assert( !self.current.length );
-
-  query = self._querySplit( query );
-
-  //self._enter( self.tree,query,self.upSymbol,1 );
-  self._enter( self.tree,query,'',1 );
-
-  let result = self._queryEntered( query );
-
-  self._leave( self.tree );
-  _.assert( self.current.length === 0 );
-
-  return result;
-}
-
-//
-
-function _queryEntered( query )
-{
-  let self = this;
-
-  _.assert( _.strIs( query ) || _.arrayIs( query ) );
-  _.assert( arguments.length === 1, 'Expects single argument' );
-
-  if( _.strIs( query ) )
-  {
-    query = self._querySplit( query );
-  }
-
-  let result = self._queryAct( self.tree,query );
-
-  return result;
-}
-
-//
-
-function _queryAct( here,query )
-{
-
-  _.assert( arguments.length === 2, 'Expects exactly two arguments' );
-  _.assert( query.length > 0 );
-  // _.assert( query[ 0 ] === self.upSymbol || query[ 0 ] === self.downSymbol );
-
-  let result;
-  let self = this;
-  let path = self.current[ self.current.length-1 ].path;
-  let queryOriginal = query;
-  let newQuery;
-
-  /* clear from up symbol */
-
-  if( query[ 0 ] === self.upSymbol )
-  query.splice( 0,1 );
-
-  /* clear from down symbol or select */
-
-  if( query[ 0 ] === self.downSymbol )
-  {
-    for( var q = 0 ; q < query.length ; q++ )
-    if( query[ q ] !== self.downSymbol )
-    break;
-    query.splice( 0,q );
-    if( self.current.length >= q )
-    result = self.current[ self.current.length-q ].node;
-    newQuery = query.slice();
-  }
-  else
-  {
-    if( !here )
-    {
-      // debugger;
-      return self._errorQuerying({ at : path, query : queryOriginal.join( self.upSymbol ) });
-    }
-    result = here[ query[ 0 ] ];
-    newQuery = query.slice( 1 );
-  }
-
-  /* */
-
-  if( result === undefined )
-  {
-    // debugger;
-    return self._errorQuerying({ at : path, query : queryOriginal.join( self.upSymbol ) });
-  }
-
-  /* */
-
-  let current = result;
-  let entered = self._enter( current,query,path,0 );
-  if( entered instanceof self.ErrorQuerying )
-  {
-    debugger;
-    return self._errorQuerying({ reason : 'dead cycle', at : path, query : queryOriginal.join( self.upSymbol ) });
-  }
-
-  /* */
-
-  if( newQuery.length )
-  {
-    if( _.strIs( result ) )
-    result = self._resolveEntered( result );
-    if( result !== undefined )
-    result = self._queryAct( result,newQuery );
-  }
-  else
-  {
-    result = self._resolveEntered( result );
-  }
-
-  /* */
-
-  self._leave( current );
-
-  if( result === undefined )
-  {
-    debugger;
-    return self._errorQuerying({ at : path, query : query.join( self.upSymbol ) });
-  }
-
-  return result;
-}
+let _queryTracking = _.routineFromPreAndBody( _query_pre, _queryTracking_body );
 
 // --
 // tracker
@@ -627,44 +471,47 @@ function _queryAct( here,query )
 function _entryGet( entry )
 {
   let self = this;
-
-  let result = _.entityFilter( self.current,entry );
-
+  let result = _.entityFilter( self.current, entry );
   return result;
 }
 
 //
 
-function _enter( node,query,path,throwing )
+function _enter( o )
 {
   let self = this;
-
-  _.assert( arguments.length === 4 );
-  _.assert( _.arrayIs( query ) );
-
   let newPath;
 
-  if( path === '' )
-  newPath = '/'
-  else if( path === '/' )
-  newPath = path + query[ 0 ];
+  _.routineOptionsPreservingUndefines( _enter, arguments );
+  _.assert( arguments.length === 1 );
+  _.assert( _.strIs( o.query ) || _.numberIs( o.query ) );
+
+  let upToken = self.upTokenDefault();
+  if( o.path === '' )
+  newPath = upToken;
+  else if( o.path === upToken )
+  newPath = o.path + o.query;
+  else if( o.query )
+  newPath = o.path + upToken + o.query;
   else
-  newPath = path + query[ 0 ] + query[ 1 ];
+  newPath = o.path;
 
-  // let newPath = path !== self.upSymbol ? path + query[ 0 ] + query[ 1 ] : path + query[ 0 ]; debugger;
-  // let newPath = path + query[ 0 ] + query[ 1 ]; debugger;
+  let d = Object.create( null );
+  d.rootContainer = o.rootContainer;
+  d.currentContainer = o.currentContainer;
+  d.subject = o.subject;
+  d.path = o.path;
+  d.newPath = newPath;
+  d.query = o.query;
 
-  let d = {};
-  d.node = node;
-  d.path = newPath;
-  d.query = query.join( '' );
-  //d.query = query.join( self.upSymbol );
+  _.assert( _.strIs( d.path ) );
+  _.assert( _.strIs( d.newPath ) );
 
-  if( query )
-  if( self._entryGet({ query : d.query, node : node }).length )
+  if( o.query )
+  if( self._entryGet({ path : o.path, rootContainer : o.rootContainer }).length )
   {
     let err = self._errorQuerying({ reason : 'dead cycle', at : newPath, query : d.query });;
-    if( throwing )
+    if( o.throwing )
     throw err;
     else
     return err;
@@ -675,9 +522,19 @@ function _enter( node,query,path,throwing )
   return d;
 }
 
+_enter.defaults =
+{
+  rootContainer : null,
+  currentContainer : null,
+  subject : null,
+  query : null,
+  path : null,
+  throwing : 0,
+}
+
 //
 
-function _leave( node )
+function _leave( path )
 {
   let self = this;
 
@@ -685,7 +542,7 @@ function _leave( node )
 
   let d = self.current.pop();
 
-  _.assert( d.node === node );
+  _.assert( d.path === path );
 
   return d;
 }
@@ -696,8 +553,7 @@ function _leave( node )
 
 function ErrorQuerying( o )
 {
-  _.mapExtend( this,o );
-  //self.stack = _.diagnosticStack();
+  _.mapExtend( this, o );
 }
 
 ErrorQuerying.prototype = Object.create( Error.prototype );
@@ -708,7 +564,6 @@ ErrorQuerying.prototype.name = 'x';
 
 function _errorQuerying( o )
 {
-  // debugger;
   let err = new ErrorQuerying( o );
   err = _.err( err );
   _.assert( err instanceof Error );
@@ -755,13 +610,45 @@ function strFrom( src )
 
 //
 
-function EntityResolve( src, tree )
+function _strJoin()
 {
-  if( tree === undefined )
-  tree = src;
-  _.assert( arguments.length === 1 || arguments.length === 2 );
-  let self = new Self({ tree : tree });
-  return self.resolve( src );
+  let result = '';
+  for( var i = 0; i < arguments.length; i++ )
+  {
+    _.assert( _.strIs( arguments[ i ] ), 'Can\'t join elements:', '\n', arguments, '\n', 'Expects String, but got:', arguments[ i ] );
+    result += arguments[ i ];
+  }
+  return result;
+}
+
+let strJoin = _.routineVectorize_functor
+({
+  routine : _strJoin,
+  vectorizingArray : 1,
+  vectorizingMap : 1,
+  vectorizingKeys : 0,
+  select : Infinity
+})
+
+//
+
+function upTokenDefault()
+{
+  let self = this;
+  let result = self.onUpTokenDefault();
+  _.assert( _.strIs( result ) );
+  return result;
+}
+
+//
+
+function onUpTokenDefault()
+{
+  let self = this;
+  let result = self.upToken;
+  if( _.arrayIs( result ) )
+  result = _.strsShortest( result );
+  return result;
 }
 
 // --
@@ -780,6 +667,17 @@ function resolveAndAssign( src )
   return self.tree;
 }
 
+//
+
+function EntityResolve( src, tree )
+{
+  if( tree === undefined )
+  tree = src;
+  _.assert( arguments.length === 1 || arguments.length === 2 );
+  let self = new Self({ tree : tree });
+  return self.resolve( src );
+}
+
 // --
 // relations
 // --
@@ -793,13 +691,15 @@ let Composes =
   investigatingArrayLike : true,
 
   current : _.define.own([]),
+  stack : _.define.own([]),
 
-  prefixSymbol : '{{',
-  postfixSymbol : '}}',
-  downSymbol : '..',
-  upSymbol : '/',
+  prefixToken : '{{',
+  postfixToken : '}}',
+  downToken : '..',
+  upToken : _.define.own([ '\\/', '/' ]),
 
   onStrFrom : null,
+  onUpTokenDefault : onUpTokenDefault,
 
 }
 
@@ -834,11 +734,13 @@ let Proto =
 
   // resolve
 
+  resolveString : resolveString,
   resolve : resolve,
   resolveTry : resolveTry,
   _resolve : _resolve,
   _resolveEnter : _resolveEnter,
   _resolveEntered : _resolveEntered,
+
   _resolveString : _resolveString,
   _resolveMap : _resolveMap,
   _resolveArray : _resolveArray,
@@ -846,14 +748,10 @@ let Proto =
 
   // query
 
-  query2 : query2,
-
+  _queryAct : _queryAct,
   query : query,
   queryTry : queryTry,
-  _querySplit : _querySplit,
-  _queryEntering : _queryEntering,
-  _queryEntered : _queryEntered,
-  _queryAct : _queryAct,
+  _queryTracking : _queryTracking,
 
   // tracker
 
@@ -866,11 +764,14 @@ let Proto =
   _errorQuerying : _errorQuerying,
   shouldInvestigate : shouldInvestigate,
   strFrom : strFrom,
-  EntityResolve : EntityResolve,
+  _strJoin : _strJoin,
+  strJoin : strJoin,
+  upTokenDefault : upTokenDefault,
 
   // shortcuts
 
   resolveAndAssign : resolveAndAssign,
+  EntityResolve : EntityResolve,
 
   // relations
 
@@ -892,13 +793,13 @@ _.classDeclare
 });
 
 _.Copyable.mixin( Self );
-_.mapExtend( _global_,Globals );
+_.mapExtend( _global_, Globals );
 
 //
 
-if( typeof module !== 'undefined' )
-if( _global_.WTOOLS_PRIVATE )
-{ /* delete require.cache[ module.id ]; */ }
+// if( typeof module !== 'undefined' )
+// if( _global_.WTOOLS_PRIVATE )
+// { /* delete require.cache[ module.id ]; */ }
 
 _[ Self.shortName ] = _global_[ Self.name ] = Self;
 if( typeof module !== 'undefined' )
