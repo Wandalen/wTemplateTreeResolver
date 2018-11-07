@@ -398,25 +398,37 @@ function _resolveArray( src )
 // query
 // --
 
-// function query( o )
-// {
-//   let self = this;
+function _query_pre( routine, args )
+{
+
+  args = _.longSlice( args );
+
+  let o = args[ 0 ]
+  if( _.strIs( o ) )
+  o = { query : o }
+
+  o.container = this.tree;
+  o.downSymbol = this.downSymbol;
+  o.upSymbol = this.upSymbol;
+
+  _.assert( arguments.length === 2 );
+  _.assert( args.length === 1 );
+
+  debugger;
+
+  return _.entitySelect.pre.call( this, routine, [ o ] );
+}
+
+function _query_body( o )
+{
+  return _.entitySelect.body.call( _, o );
+}
+
+_.routineExtend( _query_body, _.entitySelect.body );
+
+let query2 = _.routineFromPreAndBody( _query_pre, _query_body );
+
 //
-//   if( _.strIs( arguments[ 0 ] ) )
-//   o = { path : arguments[ 0 ] }
-//
-//   _.assert( arguments.length === 1 );
-//   _.routineOptions( query, o );
-//
-//   debugger;
-//
-//   _.entitySelect( self.tree, o.path );
-// }
-//
-// query.defaults =
-// {
-//   path : null,
-// }
 
 function query( query )
 {
@@ -466,7 +478,7 @@ function _querySplit( query )
     query = _.strSplit
     ({
       src : query,
-      delimeter : [ self.upSymbol,self.downSymbol ],
+      delimeter : [ self.upSymbol, self.downSymbol ],
       preservingDelimeters : 1,
       preservingEmpty : 0,
     });
@@ -784,7 +796,7 @@ let Composes =
 
   prefixSymbol : '{{',
   postfixSymbol : '}}',
-  downSymbol : '^',
+  downSymbol : '..',
   upSymbol : '/',
 
   onStrFrom : null,
@@ -833,6 +845,8 @@ let Proto =
   _resolveRegexp : _resolveRegexp,
 
   // query
+
+  query2 : query2,
 
   query : query,
   queryTry : queryTry,
