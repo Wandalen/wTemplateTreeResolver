@@ -103,6 +103,7 @@ function _resolve( src )
   let self = this;
 
   _.assert( arguments.length === 1, 'Expects single argument' );
+  _.assert( self.stack.length === 0, 'Something wrong with stack' );
 
   let result = self._resolveEnter
   ({
@@ -112,6 +113,8 @@ function _resolve( src )
     query : '',
     path : self.upTokenDefault(),
   });
+
+  _.assert( self.stack.length === 0, 'Something wrong with stack' );
 
   return result;
 }
@@ -230,54 +233,7 @@ function _resolveString( src )
     {
       _.assert( strip.length === 1 );
       strip = strip[ 0 ];
-      element = strip;
-
-      let it;
-      try
-      {
-        it = self._queryTracking( element );
-      }
-      catch( err )
-      {
-        throwen = 1;
-        element = err;
-      }
-
-      if( it && it.error )
-      element = it.error;
-
-      if( it && !it.error )
-      {
-        let lit = it.lastSelect;
-        self._queryBegin( lit );
-
-        if( it.error )
-        {
-          element = it.error;
-        }
-        else
-        {
-
-          let element2 = it.result;
-          if( element !== element2 && element2 !== undefined )
-          {
-            debugger;
-            element2 = self._resolveEnter
-            ({
-              subject : element2,
-              rootContainer : current ? current.root : self.tree,
-              currentContainer : it.lastSelect.src,
-              path : it.lastSelect.path,
-              query : '',
-            });
-          }
-          element = element2;
-
-          self._queryEnd( lit );
-        }
-
-      }
-
+      element = handleStrip( strip );
     }
 
     _.assert( _.strIs( strip ) );
@@ -340,6 +296,62 @@ function _resolveString( src )
   }
 
   return result;
+
+  /* */
+
+  function handleStrip( strip )
+  {
+    let element = strip;
+
+    let it;
+    try
+    {
+      it = self._queryTracking( element );
+    }
+    catch( err )
+    {
+      throwen = 1;
+      element = err;
+    }
+
+    if( it && it.error )
+    element = it.error;
+
+    if( it && !it.error )
+    {
+      let lit = it.lastSelect;
+      self._queryBegin( lit );
+
+      if( it.error )
+      {
+        element = it.error;
+      }
+      else
+      {
+
+        let element2 = it.result;
+        if( element !== element2 && element2 !== undefined )
+        {
+          debugger;
+          element2 = self._resolveEnter
+          ({
+            subject : element2,
+            rootContainer : current ? current.root : self.tree,
+            currentContainer : it.lastSelect.src,
+            path : it.lastSelect.path,
+            query : '',
+          });
+        }
+        element = element2;
+
+        self._queryEnd( lit );
+      }
+
+    }
+
+    return element
+  }
+
 }
 
 //
@@ -505,7 +517,7 @@ function _queryTracking_pre( routine, args )
   {
     debugger;
     _.sure( !!current, 'Cant resolve', () => _.strQuote( o.query ) + ' no current!' );
-    o.it = current.iteration();
+    o.it = current.reiteration();
     o.container = null;
   }
 
@@ -548,7 +560,7 @@ function _queryBegin( it )
     it.iterator.error = _.ErrorLooking
     (
       'Dead lock', _.strQuote( it.context.query ),
-      '\nbecause', _.strQuote( _.path.join.apply( _.path, it.apath ) ), 'does not exist',
+      '\nbecause', _.strQuote( it.query ), 'does not exist',
       '\nat', _.strQuote( it.path ),
       '\nin container', _.toStr( it.context.container )
     );
