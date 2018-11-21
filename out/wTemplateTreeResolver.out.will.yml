@@ -4,7 +4,7 @@ about:
   description: >-
     Class to resolve tree-like data structures with links  or paths in the
     structure. Use the module to resolve template or path to value.
-  version: 0.4.65
+  version: 0.4.66
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -272,7 +272,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.4.65
+    version: 0.4.66
     criterion:
       default: 1
       debug: 1
