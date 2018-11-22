@@ -4,7 +4,7 @@ about:
   description: >-
     Class to resolve tree-like data structures with links  or paths in the
     structure. Use the module to resolve template or path to value.
-  version: 0.4.66
+  version: 0.4.67
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -82,7 +82,7 @@ path:
 submodule: {}
 reflector:
   reflect.proto.0:
-    reflectMap:
+    filePath:
       ./proto: ./out.release
     srcFilter:
       maskAll:
@@ -106,7 +106,7 @@ reflector:
     inherit:
       - predefined.*
   reflect.proto.1:
-    reflectMap:
+    filePath:
       ./proto: ./out.debug
     srcFilter:
       maskAll:
@@ -152,15 +152,14 @@ reflector:
     inherit:
       - predefined.*
   exported.0:
-    reflectMap:
-      ./proto: true
+    filePath: ./proto
     srcFilter:
       prefixPath: .
     dstFilter:
       prefixPath: .
   exportedFiles.0:
     recursive: 0
-    reflectMap:
+    filePath:
       ./dwtools/Tools.s: true
       ./dwtools/amid/amapping/.DS_Store: true
       ./dwtools/amid/amapping/TemplateTreeAresolver.s: true
@@ -272,7 +271,7 @@ build:
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.4.66
+    version: 0.4.67
     criterion:
       default: 1
       debug: 1
