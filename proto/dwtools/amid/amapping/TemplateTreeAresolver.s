@@ -191,7 +191,7 @@ function _resolveEntered( src )
   if( _.longIs( src ) )
   return self._resolveArray( src );
 
-  throw _.err( 'Unexpected type of src', _.strTypeOf( src ) );
+  throw _.err( 'Unexpected type of src', _.strType( src ) );
 }
 
 //
@@ -263,7 +263,7 @@ function _resolveString( src )
         debugger;
         element2 = _.err
         (
-         'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.strTypeOf( element2 ), '\n',
+         'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.strType( element2 ), '\n',
          'Allowed types are: String, Array, Map'
         );
         return element2;
