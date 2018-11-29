@@ -452,7 +452,7 @@ function query_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  return _.select.pre.call( this, routine, [ o ] );
+  return _.selectSingle.pre.call( this, routine, [ o ] );
 }
 
 //
@@ -460,11 +460,11 @@ function query_pre( routine, args )
 function _queryAct_body( it )
 {
   let self = this;
-  let result = _.select.body.call( _, it );
+  let result = _.selectSingle.body.call( _, it );
   return it;
 }
 
-_.routineExtend( _queryAct_body, _.select.body );
+_.routineExtend( _queryAct_body, _.selectSingle.body );
 
 var defaults = _queryAct_body.defaults;
 
@@ -524,7 +524,7 @@ function _queryTracking_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  return _.select.pre.call( this, routine, [ o ] );
+  return _.selectSingle.pre.call( this, routine, [ o ] );
 }
 
 //
