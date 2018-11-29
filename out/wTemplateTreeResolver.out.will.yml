@@ -4,7 +4,7 @@ about:
   description: >-
     Class to resolve tree-like data structures with links  or paths in the
     structure. Use the module to resolve template or path to value.
-  version: 0.4.67
+  version: 0.4.74
   enabled: 1
   interpreters:
     - nodejs >= 6.0.0
@@ -44,6 +44,7 @@ path:
       proto: 1
       export: 1
       tar: 1
+      public: 1
   baseDir:
     path: ..
   exportedFiles.0:
@@ -65,6 +66,7 @@ path:
       proto: 1
       export: 1
       tar: 1
+      public: 1
   exportedTerminals.0:
     path:
       - ./dwtools/Tools.s
@@ -77,6 +79,7 @@ path:
       proto: 1
       export: 1
       tar: 1
+      public: 1
 submodule: {}
 reflector:
   reflect.proto.0:
@@ -256,12 +259,13 @@ build:
       proto: 1
       export: 1
       tar: 1
+      public: 1
     steps:
       - 'build::debug.raw'
       - 'step::export.proto'
 exported:
   proto.export:
-    version: 0.4.67
+    version: 0.4.74
     criterion:
       default: 1
       debug: 1
@@ -269,6 +273,7 @@ exported:
       proto: 1
       export: 1
       tar: 1
+      public: 1
     exportedReflector: 'reflector::exported.0'
     exportedFilesReflector: 'reflector::exportedFiles.0'
     exportedDirPath: 'path::exportedDir.0'
@@ -285,3 +290,4 @@ exported:
         proto: 1
         export: 1
         tar: 1
+        public: 1
