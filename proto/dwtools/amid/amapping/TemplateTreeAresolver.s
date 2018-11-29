@@ -2,6 +2,7 @@
 
 'use strict';
 
+
 /**
   @module Tools/mid/TemplateTreeResolver - Class to resolve tree-like with links data structures or paths in the structure. Use the module to resolve template or path to value.
 */
