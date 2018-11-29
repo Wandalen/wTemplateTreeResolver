@@ -241,7 +241,7 @@ function _resolveString( src )
 
     if( element instanceof _.ErrorLooking || throwen )
     {
-      debugger;
+      // debugger;
       element = _.err
       (
         'Cant resolve', _.strQuote( src.substring( 0,80 ) ),
@@ -333,7 +333,7 @@ function _resolveString( src )
         let element2 = it.result;
         if( element !== element2 && element2 !== undefined )
         {
-          debugger;
+          // debugger;
           element2 = self._resolveEnter
           ({
             subject : element2,
@@ -364,9 +364,9 @@ function _resolveRegexp( src )
   _.assert( _.regexpIs( src ) );
 
   let source = src.source;
-  debugger;
+  // debugger;
   source = self._resolveString( source );
-  debugger;
+  // debugger;
 
   if( source instanceof self.ErrorLooking )
   return source;
@@ -552,7 +552,7 @@ function _queryBegin( it )
 {
   let self = this;
 
-  debugger;
+  // debugger;
   let found = _.entityFilter( self.stack, { src : it.src } );
 
   if( found.length )
