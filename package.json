@@ -11,9 +11,9 @@
     }
   ],
   "license": "MIT",
-  "main": "proto/dwtools/amid/amapping/TemplateTreeAresolver.s",
+  "main": "proto/dwtools/amid/l5_mapper/TemplateTreeAresolver.s",
   "files": [
-    "proto/dwtools/amid/amapping",
+    "proto/dwtools/amid/l5_mapper",
     "proto/dwtools/Tools.s",
     "production"
   ],
