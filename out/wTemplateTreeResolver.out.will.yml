@@ -52,11 +52,13 @@ path:
       - .
       - ./dwtools
       - ./dwtools/Tools.s
+      - ./dwtools/abase
       - ./dwtools/amid
       - ./dwtools/amid/l5_mapper
       - ./dwtools/amid/l5_mapper/TemplateTreeAresolver.s
       - ./dwtools/amid/l5_mapper.test
       - ./dwtools/amid/l5_mapper.test/TemplateTree.test.s
+      - ./dwtools/atop
     criterion:
       default: 1
       debug: 1
