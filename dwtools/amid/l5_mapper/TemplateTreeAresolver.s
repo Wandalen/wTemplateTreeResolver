@@ -747,8 +747,8 @@ let strJoin = _.routineVectorize_functor
 ({
   routine : _strJoin,
   vectorizingArray : 1,
-  vectorizingMap : 1,
-  vectorizingKeys : 0,
+  vectorizingMapVals : 1,
+  vectorizingMapKeys : 0,
   select : Infinity
 })
 
