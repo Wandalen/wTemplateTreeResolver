@@ -112,7 +112,7 @@ function _resolve( src )
     subject : src,
     rootContainer : self.tree,
     currentContainer : self.tree,
-    query : '',
+    selector : '',
     path : self.upTokenDefault(),
   });
 
@@ -126,8 +126,6 @@ function _resolve( src )
 function _resolveEnter( o )
 {
   let self = this;
-  // let l = self.current.length;
-  // let current = self.current[ l-1 ];
   let current = self.stack[ self.stack.length-1 ];
 
   _.assert( arguments.length === 1 );
@@ -136,27 +134,7 @@ function _resolveEnter( o )
   if( o.path === null )
   o.path = current ? current.path : self.upTokenDefault();
 
-  // let entered = self._enter
-  // ({
-  //   rootContainer : o.rootContainer,
-  //   currentContainer : o.currentContainer,
-  //   subject : o.subject,
-  //   query : o.query,
-  //   path : o.path,
-  //   throwing : 0,
-  // });
-
-  // if( entered instanceof self.ErrorLooking )
-  // {
-  //   debugger;
-  //   return entered;
-  // }
-
   let result = self._resolveEntered( o.subject );
-
-  // self._leave( o.path );
-
-  // _.assert( self.current.length === l );
 
   return result;
 }
@@ -166,7 +144,7 @@ _resolveEnter.defaults =
   subject : null,
   rootContainer : null,
   currentContainer : null,
-  query : null,
+  selector : null,
   path : null,
 }
 
@@ -245,7 +223,7 @@ function _resolveString( src )
       // debugger;
       element = _.err
       (
-        'Cant resolve', _.strQuote( src.substring( 0,80 ) ),
+        'Cant resolve', _.strQuote( src.substring( 0, 80 ) ),
         '\n', _.strQuote( strip ), 'is not defined', '\n',
         element
       );
@@ -265,7 +243,7 @@ function _resolveString( src )
         debugger;
         element2 = _.err
         (
-         'Cant resolve', _.strQuote( src.substring( 0,80 ) ), '\n', _.strQuote( strip ), 'is', _.strType( element2 ), '\n',
+         'Cant resolve', _.strQuote( src.substring( 0, 80 ) ), '\n', _.strQuote( strip ), 'is', _.strType( element2 ), '\n',
          'Allowed types are: String, Array, Map'
         );
         return element2;
@@ -292,8 +270,8 @@ function _resolveString( src )
   {
     throw _.err
     (
-      'Can\'t mix different elements of template :', _.strQuote( src.substring( 0,80 ) ),
-      '\n','Elements:\n',rarray,'\n', err.message
+      'Can\'t mix different elements of template :', _.strQuote( src.substring( 0, 80 ) ),
+      '\n', 'Elements:\n', rarray, '\n', err.message
     );
   }
 
@@ -308,7 +286,7 @@ function _resolveString( src )
     let it;
     try
     {
-      it = self._queryTracking( element );
+      it = self._selectTracking( element );
     }
     catch( err )
     {
@@ -322,7 +300,7 @@ function _resolveString( src )
     if( it && !it.error )
     {
       let lit = it.lastSelect;
-      self._queryBegin( lit );
+      self._selectBegin( lit );
 
       if( it.error )
       {
@@ -331,7 +309,7 @@ function _resolveString( src )
       else
       {
 
-        let element2 = it.result;
+        let element2 = it.dst;
         if( element !== element2 && element2 !== undefined )
         {
           // debugger;
@@ -341,12 +319,12 @@ function _resolveString( src )
             rootContainer : current ? current.root : self.tree,
             currentContainer : it.lastSelect.src,
             path : it.lastSelect.path,
-            query : '',
+            selector : '',
           });
         }
         element = element2;
 
-        self._queryEnd( lit );
+        self._selectEnd( lit );
       }
 
     }
@@ -396,7 +374,7 @@ function _resolveMap( src )
       subject : src[ s ],
       currentContainer : src[ s ],
       rootContainer : current ? current.root : self.tree,
-      query : s,
+      selector : s,
     });
     if( result[ s ] instanceof self.ErrorLooking )
     {
@@ -423,7 +401,7 @@ function _resolveArray( src )
       subject : src[ s ],
       currentContainer : src[ s ],
       rootContainer : current ? current.root : self.tree,
-      query : s,
+      selector : s,
     });
     if( result[ s ] instanceof self.ErrorLooking )
     {
@@ -435,19 +413,19 @@ function _resolveArray( src )
 }
 
 // --
-// query
+// select
 // --
 
-function query_pre( routine, args )
+function select_pre( routine, args )
 {
 
   args = _.longSlice( args );
 
   let o = args[ 0 ]
   if( _.strIs( o ) )
-  o = { query : o }
+  o = { selector : o }
 
-  o.container = this.tree;
+  o.src = this.tree;
   o.downToken = this.downToken;
   o.upToken = this.upToken;
 
@@ -459,48 +437,48 @@ function query_pre( routine, args )
 
 //
 
-function _queryAct_body( it )
+function _selectAct_body( it )
 {
   let self = this;
   let result = _.selectSingle.body.call( _, it );
   return it;
 }
 
-_.routineExtend( _queryAct_body, _.selectSingle.body );
+_.routineExtend( _selectAct_body, _.selectSingle.body );
 
-var defaults = _queryAct_body.defaults;
+var defaults = _selectAct_body.defaults;
 
 defaults.missingAction = 'throw';
 
-let _queryAct = _.routineFromPreAndBody( query_pre, _queryAct_body );
+let _selectAct = _.routineFromPreAndBody( select_pre, _selectAct_body );
 
 //
 
-function query_body( o )
+function select_body( o )
 {
-  let it = this._queryAct.body.call( this, o );
-  return it.result;
+  let it = this._selectAct.body.call( this, o );
+  return it.dst;
 }
 
-_.routineExtend( query_body, _queryAct.body );
+_.routineExtend( select_body, _selectAct.body );
 
-let query = _.routineFromPreAndBody( query_pre, query_body );
+let select = _.routineFromPreAndBody( select_pre, select_body );
 
-var defaults = query.defaults;
+var defaults = select.defaults;
 
-query.missingAction = 'throw';
+select.missingAction = 'throw';
 
 //
 
-let queryTry = _.routineFromPreAndBody( query_pre, query_body );
+let selectTry = _.routineFromPreAndBody( select_pre, select_body );
 
-var defaults = queryTry.defaults;
+var defaults = selectTry.defaults;
 
 defaults.missingAction = 'undefine';
 
 //
 
-function _queryTracking_pre( routine, args )
+function _selectTracking_pre( routine, args )
 {
   let self = this;
   let current = self.stack[ self.stack.length-1 ];
@@ -509,18 +487,18 @@ function _queryTracking_pre( routine, args )
 
   let o = args[ 0 ]
   if( _.strIs( o ) )
-  o = { query : o }
+  o = { selector : o }
 
-  o.container = this.tree;
+  o.src = this.tree;
   o.downToken = this.downToken;
   o.upToken = this.upToken;
 
-  if( _.strBegins( o.query, [ '..', '.' ] ) )
+  if( _.strBegins( o.selector, [ '..', '.' ] ) )
   {
     debugger;
-    _.sure( !!current, 'Cant resolve', () => _.strQuote( o.query ) + ' no current!' );
+    _.sure( !!current, 'Cant resolve', () => _.strQuote( o.selector ) + ' no current!' );
     o.it = current.reiteration();
-    o.container = null;
+    o.src = null;
   }
 
   _.assert( arguments.length === 2 );
@@ -531,25 +509,25 @@ function _queryTracking_pre( routine, args )
 
 //
 
-function _queryTracking_body( it )
+function _selectTracking_body( it )
 {
   let self = this;
-  this._queryAct.body.call( this, it );
+  this._selectAct.body.call( this, it );
   // self.stack.push( it.lastSelect );
   return it;
 }
 
-_.routineExtend( _queryTracking_body, _queryAct.body );
+_.routineExtend( _selectTracking_body, _selectAct.body );
 
-let _queryTracking = _.routineFromPreAndBody( _queryTracking_pre, _queryTracking_body );
+let _selectTracking = _.routineFromPreAndBody( _selectTracking_pre, _selectTracking_body );
 
-_.assert( _queryTracking.defaults.missingAction === 'throw' );
-_queryTracking.defaults.missingAction = 'error';
-_.assert( _queryTracking.defaults.missingAction === 'error' );
+_.assert( _selectTracking.defaults.missingAction === 'throw' );
+_selectTracking.defaults.missingAction = 'error';
+_.assert( _selectTracking.defaults.missingAction === 'error' );
 
 //
 
-function _queryBegin( it )
+function _selectBegin( it )
 {
   let self = this;
 
@@ -561,10 +539,10 @@ function _queryBegin( it )
     debugger;
     it.iterator.error = _.ErrorLooking
     (
-      'Dead lock', _.strQuote( it.context.query ),
-      '\nbecause', _.strQuote( it.query ), 'does not exist',
+      'Dead lock', _.strQuote( it.context.select ),
+      '\nbecause', _.strQuote( it.selector ), 'does not exist',
       '\nat', _.strQuote( it.path ),
-      '\nin container', _.toStr( it.context.container )
+      '\nin container', _.toStr( it.context.src )
     );
     return it.iterator.error;
   }
@@ -575,7 +553,7 @@ function _queryBegin( it )
 
 //
 
-function _queryEnd( it )
+function _selectEnd( it )
 {
   let self = this;
   let pit = self.stack.pop();
@@ -584,112 +562,8 @@ function _queryEnd( it )
 }
 
 // --
-// tracker
-// --
-
-// function _entryGet( entry )
-// {
-//   let self = this;
-//   let result = _.entityFilter( self.current, entry );
-//   return result;
-// }
-//
-// //
-//
-// function _enter( o )
-// {
-//   let self = this;
-//   let newPath;
-//
-//   _.routineOptionsPreservingUndefines( _enter, arguments );
-//   _.assert( arguments.length === 1 );
-//   _.assert( _.strIs( o.query ) || _.numberIs( o.query ) );
-//
-//   let upToken = self.upTokenDefault();
-//   if( o.path === '' )
-//   newPath = upToken;
-//   else if( o.path === upToken )
-//   newPath = o.path + o.query;
-//   else if( o.query )
-//   newPath = o.path + upToken + o.query;
-//   else
-//   newPath = o.path;
-//
-//   let d = Object.create( null );
-//   d.rootContainer = o.rootContainer;
-//   d.currentContainer = o.currentContainer;
-//   d.subject = o.subject;
-//   d.path = o.path;
-//   d.newPath = newPath;
-//   d.query = o.query;
-//
-//   _.assert( _.strIs( d.path ) );
-//   _.assert( _.strIs( d.newPath ) );
-//
-//   // if( o.query )
-//   // if( self._entryGet({ path : o.path, rootContainer : o.rootContainer }).length )
-//   // {
-//   //   debugger;
-//   //   let err = self._errorQuerying({ reason : 'dead cycle', at : newPath, query : d.query });;
-//   //   if( o.throwing )
-//   //   throw err;
-//   //   else
-//   //   return err;
-//   // }
-//
-//   self.current.push( d );
-//
-//   return d;
-// }
-//
-// _enter.defaults =
-// {
-//   rootContainer : null,
-//   currentContainer : null,
-//   subject : null,
-//   query : null,
-//   path : null,
-//   throwing : 0,
-// }
-//
-// //
-//
-// function _leave( path )
-// {
-//   let self = this;
-//
-//   _.assert( arguments.length === 1, 'Expects single argument' );
-//
-//   let d = self.current.pop();
-//
-//   _.assert( d.path === path );
-//
-//   return d;
-// }
-
-// --
 // etc
 // --
-
-// function ErrorLooking( o )
-// {
-//   _.mapExtend( this, o );
-// }
-//
-// ErrorLooking.prototype = Object.create( Error.prototype );
-// ErrorLooking.prototype.constructor = ErrorLooking;
-//
-// //
-//
-// function _errorQuerying( o )
-// {
-//   let err = new ErrorLooking( o );
-//   err = _.err( err );
-//   _.assert( err instanceof Error );
-//   _.assert( err instanceof ErrorLooking );
-//   _.assert( !!err.stack );
-//   return err;
-// }
 
 let ErrorLooking = _.ErrorLooking;
 _.assert( _.routineIs( ErrorLooking ) );
@@ -812,7 +686,6 @@ let Composes =
   investigatingRegexp : true,
   investigatingArrayLike : true,
 
-  // current : _.define.own([]),
   stack : _.define.own([]),
 
   prefixToken : '{{',
@@ -852,59 +725,52 @@ let Globals =
 let Proto =
 {
 
-  init : init,
+  init,
 
   // resolve
 
-  resolveString : resolveString,
-  resolve : resolve,
-  resolveTry : resolveTry,
-  _resolve : _resolve,
-  _resolveEnter : _resolveEnter,
-  _resolveEntered : _resolveEntered,
+  resolveString,
+  resolve,
+  resolveTry,
+  _resolve,
+  _resolveEnter,
+  _resolveEntered,
 
-  _resolveString : _resolveString,
-  _resolveMap : _resolveMap,
-  _resolveArray : _resolveArray,
-  _resolveRegexp : _resolveRegexp,
+  _resolveString,
+  _resolveMap,
+  _resolveArray,
+  _resolveRegexp,
 
-  // query
+  // select
 
-  _queryAct : _queryAct,
-  query : query,
-  queryTry : queryTry,
+  _selectAct,
+  select,
+  selectTry,
 
-  _queryTracking : _queryTracking,
-  _queryBegin : _queryBegin,
-  _queryEnd : _queryEnd,
-
-  // tracker
-
-  // _entryGet : _entryGet,
-  // _enter : _enter,
-  // _leave : _leave,
+  _selectTracking,
+  _selectBegin,
+  _selectEnd,
 
   // etc
 
-  // _errorQuerying : _errorQuerying,
-  shouldInvestigate : shouldInvestigate,
-  strFrom : strFrom,
-  _strJoin : _strJoin,
-  strJoin : strJoin,
-  upTokenDefault : upTokenDefault,
+  shouldInvestigate,
+  strFrom,
+  _strJoin,
+  strJoin,
+  upTokenDefault,
 
   // shortcuts
 
-  resolveAndAssign : resolveAndAssign,
-  EntityResolve : EntityResolve,
+  resolveAndAssign,
+  EntityResolve,
 
   // relations
 
-  Composes : Composes,
-  Associates : Associates,
-  Restricts : Restricts,
-  Statics : Statics,
-  Globals : Globals,
+  Composes,
+  Associates,
+  Restricts,
+  Statics,
+  Globals,
 
 }
 
