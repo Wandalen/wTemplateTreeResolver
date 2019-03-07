@@ -299,7 +299,7 @@ function _resolveString( src )
 
     if( it && !it.error )
     {
-      let lit = it.lastSelect;
+      let lit = it.lastSelected;
       self._selectBegin( lit );
 
       if( it.error )
@@ -317,8 +317,8 @@ function _resolveString( src )
           ({
             subject : element2,
             rootContainer : current ? current.root : self.tree,
-            currentContainer : it.lastSelect.src,
-            path : it.lastSelect.path,
+            currentContainer : it.lastSelected.src,
+            path : it.lastSelected.path,
             selector : '',
           });
         }
@@ -497,7 +497,7 @@ function _selectTracking_pre( routine, args )
   {
     debugger;
     _.sure( !!current, 'Cant resolve', () => _.strQuote( o.selector ) + ' no current!' );
-    o.it = current.reiteration();
+    o.it = current.iterationReinit();
     o.src = null;
   }
 
@@ -513,7 +513,7 @@ function _selectTracking_body( it )
 {
   let self = this;
   this._selectAct.body.call( this, it );
-  // self.stack.push( it.lastSelect );
+  // self.stack.push( it.lastSelected );
   return it;
 }
 
