@@ -21,8 +21,8 @@ execution :
 
 path :
 
-  repository : git+https://github.com/Wandalen/wTemplateTreeResolver.git
-  bugs : https://github.com/Wandalen/wTemplateTreeResolver/issues
+  repository : git+https:///github.com/Wandalen/wTemplateTreeResolver.git
+  bugs : https:///github.com/Wandalen/wTemplateTreeResolver/issues
 
 step :
 
