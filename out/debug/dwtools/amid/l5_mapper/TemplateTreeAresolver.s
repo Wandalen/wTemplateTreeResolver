@@ -21,6 +21,13 @@ if( typeof module !== 'undefined' )
 
 }
 
+/**
+ * @classdesc Class to resolve tree-like with links data structures or paths in the structure
+ * @param {Object} o Options map for constructor. {@link module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver.Fields Options description }
+ * @class wTemplateTreeResolver
+ * @memberof module:Tools/mid/TemplateTreeResolver
+*/
+
 let _ = _global_.wTools;
 let Parent = null;
 let Self = function wTemplateTreeResolver( o )
@@ -53,6 +60,14 @@ function init( o )
 // resolve
 // --
 
+/**
+ * @summary Resolves provided string `src` to value.
+ * @description Prepends prefix and appends postfix symbols to string before resolve.
+ * @param {String} src String to resolve.
+ * @function resolveString
+ * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+*/
+
 function resolveString( src )
 {
   let self = this;
@@ -64,6 +79,46 @@ function resolveString( src )
 }
 
 //
+
+/**
+ * @summary Resolves provided entity `src` to value.
+ * @description Resolves intermediate links if they exist.
+ * @param {Array|Object|String|RegExp} src Entity to resolve.
+ * 
+ * @example
+ * let tree = { property : 'value' };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.resolve( '{{property}}' ); // 'value'
+ * 
+ * @example
+ * let tree = { map : { property : 'value' } };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.resolve( '{{map/property}}' ); // 'value'
+ * 
+ * @example
+ * let tree = { property1 : 'value1', property2 : 'value2' };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.resolve( '{{property1}}/{{property2}}' ); // 'value1/value2'
+ * 
+ * @example
+ * let tree = { array : [ 'a', 'b' ], property : 'c' };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.resolve( '{{array}} {{property}}' ); // [ 'a c', 'b c' ]
+ * 
+ * @example
+ * let tree = { map : { a : '1', b : '2' }, property : '3' };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.resolve( '{{map}} {{property}}' ); // { a: '1 3', b: '2 3' }
+ * 
+ * @example //resolving of intermediate links: a -> b -> c
+ * let tree = { a : '{{b}}', b : '{{c}}', c : 1 };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.resolve( '{{a}}' ); // 1
+ * 
+ * @function resolve
+ * @throws {Error} If resolve fails.
+ * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+*/
 
 function resolve( src )
 {
@@ -83,6 +138,14 @@ function resolve( src )
 }
 
 //
+
+/**
+ * @summary Resolves provided entity `src` to value. 
+ * Returns 'undefined' if fails to resolve.
+ * @param {Array|Object|String|RegExp} src Entity to resolve.
+ * @function resolveTry
+ * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+*/
 
 function resolveTry( src )
 {
@@ -462,6 +525,31 @@ function select_body( o )
 
 _.routineExtend( select_body, _selectAct.body );
 
+/**
+ * @summary Selects raw value from tree using provided selector string.
+ * @description Doesn't resolve intermediate links. Throws an Error if fails to select the value.
+ * @param {String} src Selector string.
+ * 
+ * @example
+ * let tree = { a : '{{b}}', b : 1 };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.select( 'a/b' );// 1
+ * 
+ * @example
+ * let tree = { a : '{{b}}', b : 1 };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.select( 'a' );// '{{b}}'
+ * 
+ * @example
+ * let tree = { a : { b : '{{c}}' } };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.select( 'a/b' );// '{{c}}'
+ * 
+ * @function select
+ * @throws If fails to select the value.
+ * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+*/
+
 let select = _.routineFromPreAndBody( select_pre, select_body );
 
 var defaults = select.defaults;
@@ -469,6 +557,20 @@ var defaults = select.defaults;
 select.missingAction = 'throw';
 
 //
+
+/**
+ * @summary Selects raw value from tree using provided selector string.
+ * @description Doesn't resolve intermediate links. Returns `undefined` if fails to select the value.
+ * @param {String} src Selector string.
+ * 
+ * @example
+ * let tree = { a : 1 };
+ * let template = new wTemplateTreeResolver({ tree : tree });
+ * template.select( 'b' );// undefined
+ * 
+ * @function selectTry
+ * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+*/
 
 let selectTry = _.routineFromPreAndBody( select_pre, select_body );
 
@@ -673,6 +775,25 @@ function EntityResolve( src, tree )
   let self = new Self({ tree : tree });
   return self.resolve( src );
 }
+
+/**
+ * @typedef {Object} Fields
+ * @property {Boolean} investigatingString=true
+ * @property {Boolean} investigatingMap=true
+ * @property {Boolean} investigatingRegexp=true
+ * @property {Boolean} investigatingArrayLike=true
+
+ * @property {Array} stack
+
+ * @property {String} prefixToken='{{'
+ * @property {String} postfixToken='}}'
+ * @property {String} downToken='..'
+ * @property {String} upToken=[ '\\/', '/' ]
+
+ * @property {Function} onStrFrom
+ * @property {Function} onUpTokenDefault
+ * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver
+*/
 
 // --
 // relations
