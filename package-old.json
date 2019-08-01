@@ -1,18 +1,24 @@
-
 {
   "name": "wtemplatetreeresolver",
-  "version": "0.3.0",
-  "description": "___",
+  "version": "0.4.106",
+  "engine": "node >= 6.0.0",
+  "description": "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.",
   "author": "Kostiantyn Wandalen <wanalen@willbe.so>",
+  "contributors": [
+    {
+      "name": "Kostiantyn Wandalen",
+      "email": "wanalen@willbe.so"
+    }
+  ],
   "license": "MIT",
-  "main": "proto/dwtools/amid/___",
+  "main": "proto/dwtools/amid/l5_mapper/TemplateTreeAresolver.s",
   "files": [
-    "proto/dwtools/amid",
+    "proto/dwtools/amid/l5_mapper",
     "proto/dwtools/Tools.s",
     "production"
   ],
   "scripts": {
-    "test": "wtest proto",
+    "test": "wtest .run proto/**",
     "docgen": "wdocgen proto"
   },
   "repository": {
@@ -23,12 +29,16 @@
     "url": "https://github.com/Wandalen/wTemplateTreeResolver/issues"
   },
   "dependencies": {
-    "wTools": ""
+    "wTools": "",
+    "wCopyable": ""
   },
   "devDependencies": {
     "wTesting": ""
   },
   "keywords": [
-    "wTools"
+    "Template tree",
+    "wTools",
+    "JSON",
+    "YAML"
   ]
 }
