@@ -2,7 +2,6 @@
 
 'use strict';
 
-
 /**
  * Class to resolve tree-like with links data structures or paths in the structure. Use the module to resolve template or path to value.
   @module Tools/mid/TemplateTreeResolver
@@ -32,7 +31,7 @@ let _ = _global_.wTools;
 let Parent = null;
 let Self = function wTemplateTreeResolver( o )
 {
-  return _.instanceConstructor( Self, this, arguments );
+  return _.workpiece.construct( Self, this, arguments );
 }
 
 Self.shortName = 'TemplateTreeResolver';
@@ -46,7 +45,7 @@ function init( o )
   let self = this;
 
   _.assert( arguments.length === 0 || arguments.length === 1 );
-  _.instanceInit( self );
+  _.workpiece.initFields( self );
 
   if( self.constructor === Self )
   Object.preventExtensions( self );
@@ -84,37 +83,37 @@ function resolveString( src )
  * @summary Resolves provided entity `src` to value.
  * @description Resolves intermediate links if they exist.
  * @param {Array|Object|String|RegExp} src Entity to resolve.
- * 
+ *
  * @example
  * let tree = { property : 'value' };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.resolve( '{{property}}' ); // 'value'
- * 
+ *
  * @example
  * let tree = { map : { property : 'value' } };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.resolve( '{{map/property}}' ); // 'value'
- * 
+ *
  * @example
  * let tree = { property1 : 'value1', property2 : 'value2' };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.resolve( '{{property1}}/{{property2}}' ); // 'value1/value2'
- * 
+ *
  * @example
  * let tree = { array : [ 'a', 'b' ], property : 'c' };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.resolve( '{{array}} {{property}}' ); // [ 'a c', 'b c' ]
- * 
+ *
  * @example
  * let tree = { map : { a : '1', b : '2' }, property : '3' };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.resolve( '{{map}} {{property}}' ); // { a: '1 3', b: '2 3' }
- * 
+ *
  * @example //resolving of intermediate links: a -> b -> c
  * let tree = { a : '{{b}}', b : '{{c}}', c : 1 };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.resolve( '{{a}}' ); // 1
- * 
+ *
  * @function resolve
  * @throws {Error} If resolve fails.
  * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
@@ -140,7 +139,7 @@ function resolve( src )
 //
 
 /**
- * @summary Resolves provided entity `src` to value. 
+ * @summary Resolves provided entity `src` to value.
  * Returns 'undefined' if fails to resolve.
  * @param {Array|Object|String|RegExp} src Entity to resolve.
  * @function resolveTry
@@ -529,22 +528,22 @@ _.routineExtend( select_body, _selectAct.body );
  * @summary Selects raw value from tree using provided selector string.
  * @description Doesn't resolve intermediate links. Throws an Error if fails to select the value.
  * @param {String} src Selector string.
- * 
+ *
  * @example
  * let tree = { a : '{{b}}', b : 1 };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.select( 'a/b' );// 1
- * 
+ *
  * @example
  * let tree = { a : '{{b}}', b : 1 };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.select( 'a' );// '{{b}}'
- * 
+ *
  * @example
  * let tree = { a : { b : '{{c}}' } };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.select( 'a/b' );// '{{c}}'
- * 
+ *
  * @function select
  * @throws If fails to select the value.
  * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
@@ -562,12 +561,12 @@ select.missingAction = 'throw';
  * @summary Selects raw value from tree using provided selector string.
  * @description Doesn't resolve intermediate links. Returns `undefined` if fails to select the value.
  * @param {String} src Selector string.
- * 
+ *
  * @example
  * let tree = { a : 1 };
  * let template = new wTemplateTreeResolver({ tree : tree });
  * template.select( 'b' );// undefined
- * 
+ *
  * @function selectTry
  * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
 */
