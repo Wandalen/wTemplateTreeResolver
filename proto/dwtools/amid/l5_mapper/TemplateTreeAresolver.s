@@ -499,30 +499,30 @@ function select_pre( routine, args )
 
 //
 
-function _selectAct_body( it )
+function _selectIt_body( it )
 {
   let self = this;
   let result = _.selectSingle.body.call( _, it );
   return it;
 }
 
-_.routineExtend( _selectAct_body, _.selectSingle.body );
+_.routineExtend( _selectIt_body, _.selectSingle.body );
 
-var defaults = _selectAct_body.defaults;
+var defaults = _selectIt_body.defaults;
 
 defaults.missingAction = 'throw';
 
-let _selectAct = _.routineFromPreAndBody( select_pre, _selectAct_body );
+let _selectIt = _.routineFromPreAndBody( select_pre, _selectIt_body );
 
 //
 
 function select_body( o )
 {
-  let it = this._selectAct.body.call( this, o );
+  let it = this._selectIt.body.call( this, o );
   return it.dst;
 }
 
-_.routineExtend( select_body, _selectAct.body );
+_.routineExtend( select_body, _selectIt.body );
 
 /**
  * @summary Selects raw value from tree using provided selector string.
@@ -613,12 +613,12 @@ function _selectTracking_pre( routine, args )
 function _selectTracking_body( it )
 {
   let self = this;
-  this._selectAct.body.call( this, it );
+  this._selectIt.body.call( this, it );
   // self.stack.push( it.lastSelected );
   return it;
 }
 
-_.routineExtend( _selectTracking_body, _selectAct.body );
+_.routineExtend( _selectTracking_body, _selectIt.body );
 
 let _selectTracking = _.routineFromPreAndBody( _selectTracking_pre, _selectTracking_body );
 
@@ -640,10 +640,10 @@ function _selectBegin( it )
     debugger;
     it.iterator.error = _.ErrorLooking
     (
-      'Dead lock', _.strQuote( it.context.select ),
+      'Dead lock', _.strQuote( it.src ),
       '\nbecause', _.strQuote( it.selector ), 'does not exist',
       '\nat', _.strQuote( it.path ),
-      '\nin container', _.toStr( it.context.src )
+      '\nin container', _.toStr( it.src )
     );
     return it.iterator.error;
   }
@@ -775,6 +775,10 @@ function EntityResolve( src, tree )
   return self.resolve( src );
 }
 
+// --
+// relations
+// --
+
 /**
  * @typedef {Object} Fields
  * @property {Boolean} investigatingString=true
@@ -794,9 +798,11 @@ function EntityResolve( src, tree )
  * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver
 */
 
-// --
-// relations
-// --
+/*
+ xxx : implement sophisticated template resolver
+*/
+
+let KnownTypes = [ 'each' ];
 
 let Composes =
 {
@@ -808,6 +814,7 @@ let Composes =
 
   stack : _.define.own([]),
 
+  // middleToken : '::',
   prefixToken : '{{',
   postfixToken : '}}',
   downToken : '..',
@@ -829,8 +836,9 @@ let Restricts =
 
 let Statics =
 {
-  ErrorLooking : ErrorLooking,
-  EntityResolve : EntityResolve,
+  KnownTypes,
+  ErrorLooking,
+  EntityResolve,
 }
 
 let Globals =
@@ -863,7 +871,7 @@ let Proto =
 
   // select
 
-  _selectAct,
+  _selectIt,
   select,
   selectTry,
 
