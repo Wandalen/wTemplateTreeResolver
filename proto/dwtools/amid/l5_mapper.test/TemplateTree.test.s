@@ -643,28 +643,28 @@ function resolveComplex( test )
   test.open( 'errors on join stage' );
 
   test.case = 'try to mix array with map';
-  test.shouldThrowError( () =>
+  test.shouldThrowErrorOfAnyKind( () =>
   {
     template.current.pop();
     template.resolve( '{{complex2}} , {{complex3}}' );
   })
 
   test.case = 'try to mix two arrays of different length';
-  test.shouldThrowError( () =>
+  test.shouldThrowErrorOfAnyKind( () =>
   {
     template.current.pop();
     template.resolve( '{{complex2_1}} , {{complex2}}' );
   })
 
   test.case = 'complex6( array ) contains element of unsupported type';
-  test.shouldThrowError( () =>
+  test.shouldThrowErrorOfAnyKind( () =>
   {
     template.current.pop();
     template.resolve( '{{complex1}} , {{complex6}}' );
   })
 
   test.case = 'complex7( map ) contains element of unsupported type';
-  test.shouldThrowError( () =>
+  test.shouldThrowErrorOfAnyKind( () =>
   {
     template.current.pop();
     template.resolve( '{{complex1}} , {{complex7}}' );
@@ -680,7 +680,7 @@ function resolveComplex( test )
 var Self =
 {
 
-  name : 'Tools/mid/TemplateTreeResolver',
+  name : 'Tools.mid.TemplateTreeResolver',
   silencing : 1,
   // verbosity : 1,
 
