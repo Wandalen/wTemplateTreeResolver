@@ -22,7 +22,7 @@ about :
 path :
 
   repository : git+https:///github.com/Wandalen/wTemplateTreeResolver.git
-  remotes :
+  origins :
    - git+https:///github.com/Wandalen/wTemplateTreeResolver.git
    - npm:///wtemplatetreeresolver
   bugs : https:///github.com/Wandalen/wTemplateTreeResolver/issues
