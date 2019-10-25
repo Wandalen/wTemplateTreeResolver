@@ -843,7 +843,7 @@ let Statics =
 
 let Globals =
 {
-  entityResolve : EntityResolve,
+  // entityResolve : EntityResolve,
 }
 
 // --
