@@ -12,6 +12,7 @@ module:
   wTemplateTreeResolver.out:
     about:
       name: wTemplateTreeResolver
+      org: noorg
       description: >-
         Class to resolve tree-like data structures with links  or paths in the
         structure. Use the module to resolve template or path to value.
@@ -51,9 +52,6 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       repository:
         path: 'git+https:///github.com/Wandalen/wTemplateTreeResolver.git'
       origins:
@@ -63,14 +61,10 @@ module:
       bugs:
         path: 'https:///github.com/Wandalen/wTemplateTreeResolver/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       temp:
         path: .
       out:
-        criterion:
-          predefined: 0
         path: .
       out.debug:
         criterion:
@@ -86,6 +80,7 @@ module:
         path: '{path::proto}/**'
       exported.dir.proto.export:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -96,6 +91,7 @@ module:
         path: ../proto
       exported.files.proto.export:
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -156,6 +152,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -173,6 +170,7 @@ module:
         recursive: 0
         mandatory: 1
         criterion:
+          generated: 1
           default: 1
           debug: 1
           raw: 1
@@ -330,6 +328,7 @@ module:
   ../:
     about:
       name: wTemplateTreeResolver
+      org: noorg
       description: >-
         Class to resolve tree-like data structures with links  or paths in the
         structure. Use the module to resolve template or path to value.
@@ -365,9 +364,6 @@ module:
       download:
         criterion:
           predefined: 1
-      remote:
-        criterion:
-          predefined: 1
       repository:
         path: 'git+https:///github.com/Wandalen/wTemplateTreeResolver.git'
       origins:
@@ -377,25 +373,21 @@ module:
       bugs:
         path: 'https:///github.com/Wandalen/wTemplateTreeResolver/issues'
       in:
-        criterion:
-          predefined: 0
         path: .
       temp:
         path: out
       out:
-        criterion:
-          predefined: 0
         path: out
       out.debug:
         criterion:
           debug: 1
-        path: ./out/debug
+        path: out/debug
       out.release:
         criterion:
           debug: 0
-        path: ./out/release
+        path: out/release
       proto:
-        path: ./proto
+        path: proto
       export:
         path: '{path::proto}/**'
     submodule: {}
