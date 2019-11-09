@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - wTemplateTreeResolver.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wTemplateTreeResolver.out.will.yml: &ref_0
+    hash: 38fb66599d00bdac10fde8481dab57c1
+    size: 13268
+  ../.ex.will.yml: &ref_1
     hash: 7eb429b19bc433765bda60ae59171760
     size: 1044
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: 844ab52058e80d039128df770afd6bfa
     size: 1692
 module:
@@ -18,11 +21,11 @@ module:
         structure. Use the module to resolve template or path to value.
       enabled: 1
       version: 0.4.89
-      interpreters: &ref_2
+      interpreters:
         - nodejs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
     path:
       module.willfiles:
@@ -258,6 +261,34 @@ module:
           debug: 1
         inherit:
           - files.reflect
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          generated: 1
+          default: 1
+          debug: 1
+          raw: 1
+          proto: 1
+          export: 1
+          tar: 1
+          public: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -323,8 +354,9 @@ module:
           tar: 1
           public: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wTemplateTreeResolver.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wTemplateTreeResolver
@@ -334,8 +366,12 @@ module:
         structure. Use the module to resolve template or path to value.
       enabled: 1
       version: 0.4.89
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - nodejs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
     path:
       module.willfiles:
         criterion:
@@ -552,3 +588,6 @@ module:
       ../.im.will.yml:
         hash: 844ab52058e80d039128df770afd6bfa
         size: 1692
+      wTemplateTreeResolver.out.will.yml:
+        hash: 38fb66599d00bdac10fde8481dab57c1
+        size: 13268
