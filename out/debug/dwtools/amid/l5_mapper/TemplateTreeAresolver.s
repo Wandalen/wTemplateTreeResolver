@@ -598,7 +598,7 @@ function _selectTracking_pre( routine, args )
   {
     debugger;
     _.sure( !!current, 'Cant resolve', () => _.strQuote( o.selector ) + ' no current!' );
-    o.it = current.iterationReinit();
+    o.it = current.iterationRemake();
     o.src = null;
   }
 
