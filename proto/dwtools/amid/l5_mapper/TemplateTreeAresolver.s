@@ -258,7 +258,7 @@ function _resolveString( src )
     onInlined : function( src ){ return [ src ]; },
   }
 
-  let strips = _.strExtractInlinedStereo( o2 );
+  let strips = _.strSplitInlinedStereo( o2 );
 
   /* */
 
