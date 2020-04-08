@@ -24,7 +24,8 @@ if( typeof module !== 'undefined' )
  * @classdesc Class to resolve tree-like with links data structures or paths in the structure
  * @param {Object} o Options map for constructor. {@link module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver.Fields Options description }
  * @class wTemplateTreeResolver
- * @memberof module:Tools/mid/TemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 let _ = _global_.wTools;
@@ -64,7 +65,9 @@ function init( o )
  * @description Prepends prefix and appends postfix symbols to string before resolve.
  * @param {String} src String to resolve.
  * @function resolveString
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 function resolveString( src )
@@ -116,7 +119,9 @@ function resolveString( src )
  *
  * @function resolve
  * @throws {Error} If resolve fails.
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 function resolve( src )
@@ -143,7 +148,9 @@ function resolve( src )
  * Returns 'undefined' if fails to resolve.
  * @param {Array|Object|String|RegExp} src Entity to resolve.
  * @function resolveTry
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 function resolveTry( src )
@@ -546,7 +553,9 @@ _.routineExtend( select_body, _selectIt.body );
  *
  * @function select
  * @throws If fails to select the value.
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 let select = _.routineFromPreAndBody( select_pre, select_body );
@@ -568,7 +577,9 @@ select.missingAction = 'throw';
  * template.select( 'b' );// undefined
  *
  * @function selectTry
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 let selectTry = _.routineFromPreAndBody( select_pre, select_body );
@@ -795,7 +806,7 @@ function EntityResolve( src, tree )
 
  * @property {Function} onStrFrom
  * @property {Function} onUpTokenDefault
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver
+ * @module Tools/mid/TemplateTreeResolver.wTemplateTreeResolver
 */
 
 /*
