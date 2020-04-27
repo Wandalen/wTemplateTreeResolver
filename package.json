@@ -1,27 +1,27 @@
 {
-  "name" : "wtemplatetreeresolver", 
-  "version" : "0.4.164", 
-  "engine" : "node >= 8.0.0", 
-  "description" : "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.", 
-  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
-  "contributors" : 
+  "name" : "wtemplatetreeresolver",
+  "version" : "0.4.165",
+  "engine" : "node >= 8.0.0",
+  "description" : "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.",
+  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>",
+  "contributors" :
   [
     { "name" : "Kostiantyn Wandalen", "email" : "wanalen@willbe.so" }
-  ], 
-  "license" : "MIT", 
-  "main" : "proto/dwtools/amid/l5_mapper/TemplateTreeAresolver.s", 
-  "files" : [ "proto/dwtools/amid/l5_mapper", "proto/dwtools/Tools.s", "out" ], 
-  "scripts" : { "test" : "wtest .run proto/**", "docgen" : "wdocgen proto" }, 
-  "repository" : 
+  ],
+  "license" : "MIT",
+  "main" : "proto/dwtools/amid/l5_mapper/TemplateTreeAresolver.s",
+  "files" : [ "proto/dwtools/amid/l5_mapper", "proto/dwtools/Tools.s", "out" ],
+  "scripts" : { "test" : "wtest .run proto/**", "docgen" : "wdocgen proto" },
+  "repository" :
   {
-    "type" : "git", 
+    "type" : "git",
     "url" : "https://github.com/Wandalen/wTemplateTreeResolver.git"
-  }, 
-  "bugs" : 
+  },
+  "bugs" :
   {
     "url" : "https://github.com/Wandalen/wTemplateTreeResolver/issues"
-  }, 
-  "dependencies" : { "wTools" : "alpha", "wCopyable" : "alpha" }, 
-  "devDependencies" : { "wTesting" : "alpha" }, 
+  },
+  "dependencies" : { "wTools" : "gamma", "wCopyable" : "gamma" },
+  "devDependencies" : { "wTesting" : "gamma" },
   "keywords" : [ "Template tree", "wTools", "JSON", "YAML" ]
 }
