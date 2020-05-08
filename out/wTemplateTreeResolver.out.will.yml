@@ -123,6 +123,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           debug: 0
         inherit:
@@ -132,6 +133,7 @@ module:
           filePath:
             'path::proto': 'path::out.*=1'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           debug: 1
         inherit:
@@ -144,6 +146,7 @@ module:
         dst:
           prefixPath: ''
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           debug: 1
         inherit:
@@ -154,6 +157,7 @@ module:
             '**': ''
           prefixPath: ../proto
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           default: 1
@@ -172,6 +176,7 @@ module:
           recursive: 0
         recursive: 0
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           generated: 1
           default: 1
@@ -433,6 +438,7 @@ module:
           filePath:
             'path::proto': 'path::out.*=1'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           debug: 0
         inherit:
@@ -442,6 +448,7 @@ module:
           filePath:
             'path::proto': 'path::out.*=1'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           debug: 1
         inherit:
@@ -451,6 +458,7 @@ module:
           filePath:
             'submodule::*/exported::*=1/path::exportedDir*=1': 'path::out.*=1'
         mandatory: 1
+        dstRewritingOnlyPreserving: 1
         criterion:
           debug: 1
         inherit:
