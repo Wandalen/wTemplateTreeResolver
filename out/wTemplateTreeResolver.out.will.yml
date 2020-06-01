@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - wTemplateTreeResolver.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wTemplateTreeResolver.out.will.yml: &ref_0
+    hash: f4111e556b75e64bdaa98dd4fa101fd9
+    size: 39101
+  ../.ex.will.yml: &ref_1
     hash: 1122550b308cd25ad34a9b06b57311a7
     size: 1823
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: efb358407ee8871ffecf8ba8291517eb
     size: 4869
 module:
@@ -18,18 +21,18 @@ module:
         structure. Use the module to resolve template or path to value.
       enabled: 1
       version: 0.5.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wtemplatetreeresolver
-      npm.scripts: &ref_5
+      npm.scripts:
         test: 'wtest .run proto/** v:5'
     path:
       module.willfiles:
@@ -172,6 +175,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: debug
@@ -188,6 +192,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: release
@@ -204,6 +209,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: debug
@@ -220,6 +226,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: release
@@ -236,6 +243,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           raw: raw
           debug: release
@@ -253,6 +261,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           raw: compiled
@@ -271,6 +280,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           raw: compiled
@@ -288,6 +298,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: only.tests
           raw: compiled
@@ -305,6 +316,7 @@ module:
           prefixPath: ''
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: only.tests
           raw: compiled
@@ -319,6 +331,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           content: proto
@@ -333,6 +346,7 @@ module:
         recursive: 0
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           generated: 1
           content: proto
@@ -694,6 +708,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          filePath: 'reflector::exported.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          filePath: 'reflector::exported.files.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -788,8 +820,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wTemplateTreeResolver.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wTemplateTreeResolver
@@ -799,13 +832,19 @@ module:
         structure. Use the module to resolve template or path to value.
       enabled: 1
       version: 0.5.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wtemplatetreeresolver
-      npm.scripts: *ref_5
+      npm.scripts:
+        test: 'wtest .run proto/** v:5'
     path:
       module.willfiles:
         criterion:
@@ -922,6 +961,7 @@ module:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: debug
@@ -935,6 +975,7 @@ module:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: release
@@ -948,6 +989,7 @@ module:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: debug
@@ -961,6 +1003,7 @@ module:
             'path::proto': '{path::out.*=1}/source'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           debug: release
@@ -974,6 +1017,7 @@ module:
             'path::proto': '{path::out.raw.release}'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           raw: raw
           debug: release
@@ -988,6 +1032,7 @@ module:
             'path::proto': '{path::out.*=1}/Main.s'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           raw: compiled
@@ -1003,6 +1048,7 @@ module:
             'path::proto': '{path::out.*=1}/Main.s'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: no.tests
           raw: compiled
@@ -1017,6 +1063,7 @@ module:
             'path::proto': '{path::out.*=1}/Tests.test.s'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: only.tests
           raw: compiled
@@ -1031,6 +1078,7 @@ module:
             'path::proto': '{path::out.*=1}/Tests.test.s'
         mandatory: 1
         dstRewritingOnlyPreserving: 1
+        linking: hardLinkMaybe
         criterion:
           tests: only.tests
           raw: compiled
@@ -1482,3 +1530,6 @@ module:
       ../.im.will.yml:
         hash: efb358407ee8871ffecf8ba8291517eb
         size: 4869
+      wTemplateTreeResolver.out.will.yml:
+        hash: f4111e556b75e64bdaa98dd4fa101fd9
+        size: 39101
