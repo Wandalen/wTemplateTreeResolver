@@ -11,7 +11,7 @@
   "license" : "MIT",
   "main" : "proto/dwtools/amid/l5_mapper/TemplateTreeAresolver.s",
   "files" : [ "proto/dwtools/amid/l5_mapper", "proto/dwtools/Tools.s", "out" ],
-  "scripts" : { "test" : "wtest .run proto/**", "docgen" : "wdocgen proto" },
+  "scripts" : { "test" : "wtest .run 'proto/**'", "docgen" : "wdocgen proto" },
   "repository" :
   {
     "type" : "git",
