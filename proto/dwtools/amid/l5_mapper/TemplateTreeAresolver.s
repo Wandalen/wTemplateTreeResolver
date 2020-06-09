@@ -30,7 +30,8 @@ if( typeof module !== 'undefined' )
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wTemplateTreeResolver( o )
+let Self = wTemplateTreeResolver;
+function wTemplateTreeResolver( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
