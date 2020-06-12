@@ -55,6 +55,7 @@ function init( o )
   if( o )
   self.copy( o );
 
+  debugger;
 }
 
 // --
@@ -290,7 +291,6 @@ function _resolveString( src )
 
     if( element instanceof _.ErrorLooking || throwen )
     {
-      // debugger;
       element = _.err
       (
         'Cant resolve', _.strQuote( src.substring( 0, 80 ) ),
@@ -382,7 +382,6 @@ function _resolveString( src )
         let element2 = it.dst;
         if( element !== element2 && element2 !== undefined )
         {
-          // debugger;
           element2 = self._resolveEnter
           ({
             subject : element2,
@@ -413,9 +412,7 @@ function _resolveRegexp( src )
   _.assert( _.regexpIs( src ) );
 
   let source = src.source;
-  // debugger;
   source = self._resolveString( source );
-  // debugger;
 
   if( source instanceof self.ErrorLooking )
   return source;
@@ -502,7 +499,7 @@ function select_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  return _.selectSingle.pre.call( this, routine, [ o ] );
+  return _.select.pre.call( this, routine, [ o ] );
 }
 
 //
@@ -510,11 +507,11 @@ function select_pre( routine, args )
 function _selectIt_body( it )
 {
   let self = this;
-  let result = _.selectSingle.body.call( _, it );
+  let result = _.select.body.call( _, it );
   return it;
 }
 
-_.routineExtend( _selectIt_body, _.selectSingle.body );
+_.routineExtend( _selectIt_body, _.select.body );
 
 var defaults = _selectIt_body.defaults;
 
@@ -617,7 +614,7 @@ function _selectTracking_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  return _.selectSingle.pre.call( this, routine, [ o ] );
+  return _.select.pre.call( this, routine, [ o ] );
 }
 
 //
@@ -826,7 +823,6 @@ let Composes =
 
   stack : _.define.own([]),
 
-  // middleToken : '::',
   prefixToken : '{{',
   postfixToken : '}}',
   downToken : '..',
@@ -855,7 +851,6 @@ let Statics =
 
 let Globals =
 {
-  // entityResolve : EntityResolve,
 }
 
 // --
@@ -927,10 +922,6 @@ _.Copyable.mixin( Self );
 _.mapExtend( _global_, Globals );
 
 //
-
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 _[ Self.shortName ] = _global_[ Self.name ] = Self;
 if( typeof module !== 'undefined' )
