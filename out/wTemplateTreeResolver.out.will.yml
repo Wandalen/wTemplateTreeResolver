@@ -155,6 +155,7 @@ module:
           export: 1
         path:
           - ../proto
+          - ../proto/Integration.test.s
           - ../proto/dwtools
           - ../proto/dwtools/Tools.s
           - ../proto/dwtools/abase
@@ -1473,6 +1474,4 @@ module:
       ../.im.will.yml:
         hash: efb358407ee8871ffecf8ba8291517eb
         size: 4869
-      wTemplateTreeResolver.out.will.yml:
-        hash: e5f334f49c8d2e29c0b77cd6effdfcc2
-        size: 38012
+      wTemplateTreeResolver.out.will.yml: *ref_0
