@@ -1,5 +1,5 @@
 
-# wTemplateTreeResolver [![Build Status](https://travis-ci.org/Wandalen/wTemplateTreeResolver.svg?branch=master)](https://travis-ci.org/Wandalen/wTemplateTreeResolver)
+# module::TemplateTreeResolver [![Status](https://github.com/Wandalen/wTemplateTreeResolver/workflows/Test/badge.svg)](https://github.com/Wandalen/wTemplateTreeResolver}/actions?query=workflow%3ATest)
 
 Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.
 
