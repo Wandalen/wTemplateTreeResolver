@@ -113,7 +113,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/atop/will/entry/Include.s
+        path: ../proto/wtools/atop/will/entry/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -123,13 +123,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/atop/will/entry/Include.s'
+        path: '{path::out.*=1}/source/wtools/atop/will/entry/Include.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/atop/will/entry/Include.s'
+        path: '{path::out.*=1}/source/wtools/atop/will/entry/Include.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -156,15 +156,15 @@ module:
         path:
           - ../proto
           - ../proto/Integration.test.s
-          - ../proto/dwtools
-          - ../proto/dwtools/Tools.s
-          - ../proto/dwtools/abase
-          - ../proto/dwtools/amid
-          - ../proto/dwtools/amid/l5_mapper
-          - ../proto/dwtools/amid/l5_mapper/TemplateTreeAresolver.s
-          - ../proto/dwtools/amid/l5_mapper.test
-          - ../proto/dwtools/amid/l5_mapper.test/TemplateTree.test.s
-          - ../proto/dwtools/atop
+          - ../proto/wtools
+          - ../proto/wtools/Tools.s
+          - ../proto/wtools/abase
+          - ../proto/wtools/amid
+          - ../proto/wtools/amid/l5_mapper
+          - ../proto/wtools/amid/l5_mapper/TemplateTreeAresolver.s
+          - ../proto/wtools/amid/l5_mapper.test
+          - ../proto/wtools/amid/l5_mapper.test/TemplateTree.test.s
+          - ../proto/wtools/atop
     submodule: {}
     reflector:
       reflect.proto.debug.raw:
@@ -895,7 +895,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/atop/will/entry/Include.s
+        path: proto/wtools/atop/will/entry/Include.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -905,13 +905,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/atop/will/entry/Include.s'
+        path: '{path::out.*=1}/source/wtools/atop/will/entry/Include.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/atop/will/entry/Include.s'
+        path: '{path::out.*=1}/source/wtools/atop/will/entry/Include.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
