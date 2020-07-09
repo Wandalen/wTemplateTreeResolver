@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - wTemplateTreeResolver.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wTemplateTreeResolver.out.will.yml: &ref_0
+    hash: a558f1d396a35966d9e049511cd1de03
+    size: 38183
+  ../.ex.will.yml: &ref_1
     hash: 78595a07dd9649151d12591aeeaf34af
     size: 1824
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: 38e3035c7bf37d549b569c7a53274c17
     size: 4866
 module:
@@ -18,18 +21,18 @@ module:
         structure. Use the module to resolve template or path to value.
       enabled: 1
       version: 0.5.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wtemplatetreeresolver
-      npm.scripts: &ref_5
+      npm.scripts:
         test: 'wtest .run proto/** v:5'
     path:
       module.willfiles:
@@ -676,6 +679,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          filePath: 'reflector::exported.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          filePath: 'reflector::exported.files.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -770,8 +791,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wTemplateTreeResolver.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wTemplateTreeResolver
@@ -781,13 +803,19 @@ module:
         structure. Use the module to resolve template or path to value.
       enabled: 1
       version: 0.5.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 10.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wtemplatetreeresolver
-      npm.scripts: *ref_5
+      npm.scripts:
+        test: 'wtest .run proto/** v:5'
     path:
       module.willfiles:
         criterion:
@@ -1446,3 +1474,6 @@ module:
       ../.im.will.yml:
         hash: 38e3035c7bf37d549b569c7a53274c17
         size: 4866
+      wTemplateTreeResolver.out.will.yml:
+        hash: a558f1d396a35966d9e049511cd1de03
+        size: 38183
