@@ -1474,6 +1474,4 @@ module:
       ../.im.will.yml:
         hash: 38e3035c7bf37d549b569c7a53274c17
         size: 4866
-      wTemplateTreeResolver.out.will.yml:
-        hash: a558f1d396a35966d9e049511cd1de03
-        size: 38183
+      wTemplateTreeResolver.out.will.yml: *ref_0
