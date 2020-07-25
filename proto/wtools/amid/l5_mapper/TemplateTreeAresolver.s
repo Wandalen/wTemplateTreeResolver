@@ -8,8 +8,7 @@
 */
 
 /**
- * @file TemplateTreeResolver.s.
- */
+ *  */
 
 if( typeof module !== 'undefined' )
 {
