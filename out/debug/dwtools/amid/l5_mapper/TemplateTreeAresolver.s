@@ -482,7 +482,7 @@ function _resolveArray( src )
 // select
 // --
 
-function select_pre( routine, args )
+function select_head( routine, args )
 {
 
   args = _.longSlice( args );
@@ -498,7 +498,7 @@ function select_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  return _.select.pre.call( this, routine, [ o ] );
+  return _.select.head.call( this, routine, [ o ] );
 }
 
 //
@@ -516,7 +516,7 @@ var defaults = _selectIt_body.defaults;
 
 defaults.missingAction = 'throw';
 
-let _selectIt = _.routineFromPreAndBody( select_pre, _selectIt_body );
+let _selectIt = _.routineUnite( select_head, _selectIt_body );
 
 //
 
@@ -555,7 +555,7 @@ _.routineExtend( select_body, _selectIt.body );
  * @module Tools/mid/TemplateTreeResolver
 */
 
-let select = _.routineFromPreAndBody( select_pre, select_body );
+let select = _.routineUnite( select_head, select_body );
 
 var defaults = select.defaults;
 
@@ -579,7 +579,7 @@ select.missingAction = 'throw';
  * @module Tools/mid/TemplateTreeResolver
 */
 
-let selectTry = _.routineFromPreAndBody( select_pre, select_body );
+let selectTry = _.routineUnite( select_head, select_body );
 
 var defaults = selectTry.defaults;
 
@@ -587,7 +587,7 @@ defaults.missingAction = 'undefine';
 
 //
 
-function _selectTracking_pre( routine, args )
+function _selectTracking_head( routine, args )
 {
   let self = this;
   let current = self.stack[ self.stack.length-1 ];
@@ -613,7 +613,7 @@ function _selectTracking_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  return _.select.pre.call( this, routine, [ o ] );
+  return _.select.head.call( this, routine, [ o ] );
 }
 
 //
@@ -628,7 +628,7 @@ function _selectTracking_body( it )
 
 _.routineExtend( _selectTracking_body, _selectIt.body );
 
-let _selectTracking = _.routineFromPreAndBody( _selectTracking_pre, _selectTracking_body );
+let _selectTracking = _.routineUnite( _selectTracking_head, _selectTracking_body );
 
 _.assert( _selectTracking.defaults.missingAction === 'throw' );
 _selectTracking.defaults.missingAction = 'error';
