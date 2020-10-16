@@ -6,33 +6,40 @@ about :
   version : '0.5.0'
   enabled : 1
   interpreters :
-  - njs >= 8.0.0
+  - njs >= 10.0.0
   - chrome >= 60.0.0
   - firefox >= 60.0.0
   keywords :
   - Template tree
   - wTools
-  - JSON
-  - YAML
   license : MIT
-  author : 'Kostiantyn Wandalen <wanalen@willbe.so>'
+  author : 'Kostiantyn Wandalen <wanalen@01.school>'
   contributors :
-  - 'Kostiantyn Wandalen <wanalen@willbe.so>'
+  - 'Kostiantyn Wandalen <wanalen@01.school>'
   npm.name : 'wtemplatetreeresolver'
   npm.scripts :
-    test : 'wtest .run proto/**'
-    docgen : 'wdocgen .build proto'
+    test : wtest .run proto/** v:5
 
 path :
 
   repository : git+https:///github.com/Wandalen/wTemplateTreeResolver.git
+  origins :
+   - git+https:///github.com/Wandalen/wTemplateTreeResolver.git
+   - npm:///wtemplatetreeresolver
   bugtracker : https:///github.com/Wandalen/wTemplateTreeResolver/issues
 
 step :
 
   proto.export :
     inherit : module.export
-    export : path::proto
+    export : path::export
+    tar : 0
+    criterion :
+      content : 'proto'
+
+  doc.export :
+    inherit : module.export
+    export : path::doc
     tar : 0
     criterion :
       content : 'proto'

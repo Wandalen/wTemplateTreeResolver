@@ -8,13 +8,12 @@
 */
 
 /**
- * @file TemplateTreeResolver.s.
- */
+ *  */
 
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../Tools.s' );
+  let _ = require( '../../../wtools/Tools.s' );
 
   _.include( 'wCopyable' );
 
@@ -24,12 +23,14 @@ if( typeof module !== 'undefined' )
  * @classdesc Class to resolve tree-like with links data structures or paths in the structure
  * @param {Object} o Options map for constructor. {@link module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver.Fields Options description }
  * @class wTemplateTreeResolver
- * @memberof module:Tools/mid/TemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 let _ = _global_.wTools;
 let Parent = null;
-let Self = function wTemplateTreeResolver( o )
+let Self = wTemplateTreeResolver;
+function wTemplateTreeResolver( o )
 {
   return _.workpiece.construct( Self, this, arguments );
 }
@@ -53,6 +54,7 @@ function init( o )
   if( o )
   self.copy( o );
 
+  debugger;
 }
 
 // --
@@ -64,7 +66,9 @@ function init( o )
  * @description Prepends prefix and appends postfix symbols to string before resolve.
  * @param {String} src String to resolve.
  * @function resolveString
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 function resolveString( src )
@@ -116,7 +120,9 @@ function resolveString( src )
  *
  * @function resolve
  * @throws {Error} If resolve fails.
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 function resolve( src )
@@ -143,7 +149,9 @@ function resolve( src )
  * Returns 'undefined' if fails to resolve.
  * @param {Array|Object|String|RegExp} src Entity to resolve.
  * @function resolveTry
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
 function resolveTry( src )
@@ -258,7 +266,7 @@ function _resolveString( src )
     onInlined : function( src ){ return [ src ]; },
   }
 
-  let strips = _.strExtractInlinedStereo( o2 );
+  let strips = _.strSplitInlinedStereo( o2 );
 
   /* */
 
@@ -282,7 +290,6 @@ function _resolveString( src )
 
     if( element instanceof _.ErrorLooking || throwen )
     {
-      // debugger;
       element = _.err
       (
         'Cant resolve', _.strQuote( src.substring( 0, 80 ) ),
@@ -374,7 +381,6 @@ function _resolveString( src )
         let element2 = it.dst;
         if( element !== element2 && element2 !== undefined )
         {
-          // debugger;
           element2 = self._resolveEnter
           ({
             subject : element2,
@@ -405,9 +411,7 @@ function _resolveRegexp( src )
   _.assert( _.regexpIs( src ) );
 
   let source = src.source;
-  // debugger;
   source = self._resolveString( source );
-  // debugger;
 
   if( source instanceof self.ErrorLooking )
   return source;
@@ -478,7 +482,7 @@ function _resolveArray( src )
 // select
 // --
 
-function select_pre( routine, args )
+function select_head( routine, args )
 {
 
   args = _.longSlice( args );
@@ -494,7 +498,7 @@ function select_pre( routine, args )
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  return _.selectSingle.pre.call( this, routine, [ o ] );
+  return _.select.head.call( this, routine, [ o ] );
 }
 
 //
@@ -502,17 +506,17 @@ function select_pre( routine, args )
 function _selectIt_body( it )
 {
   let self = this;
-  let result = _.selectSingle.body.call( _, it );
+  let result = _.select.body.call( _, it );
   return it;
 }
 
-_.routineExtend( _selectIt_body, _.selectSingle.body );
+_.routineExtend( _selectIt_body, _.select.body );
 
 var defaults = _selectIt_body.defaults;
 
 defaults.missingAction = 'throw';
 
-let _selectIt = _.routineFromPreAndBody( select_pre, _selectIt_body );
+let _selectIt = _.routineUnite( select_head, _selectIt_body );
 
 //
 
@@ -546,10 +550,12 @@ _.routineExtend( select_body, _selectIt.body );
  *
  * @function select
  * @throws If fails to select the value.
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
-let select = _.routineFromPreAndBody( select_pre, select_body );
+let select = _.routineUnite( select_head, select_body );
 
 var defaults = select.defaults;
 
@@ -568,10 +574,12 @@ select.missingAction = 'throw';
  * template.select( 'b' );// undefined
  *
  * @function selectTry
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver#
+ * @class wTemplateTreeResolver
+ * @namespace wTools
+ * @module Tools/mid/TemplateTreeResolver
 */
 
-let selectTry = _.routineFromPreAndBody( select_pre, select_body );
+let selectTry = _.routineUnite( select_head, select_body );
 
 var defaults = selectTry.defaults;
 
@@ -579,7 +587,7 @@ defaults.missingAction = 'undefine';
 
 //
 
-function _selectTracking_pre( routine, args )
+function _selectTracking_head( routine, args )
 {
   let self = this;
   let current = self.stack[ self.stack.length-1 ];
@@ -598,14 +606,14 @@ function _selectTracking_pre( routine, args )
   {
     debugger;
     _.sure( !!current, 'Cant resolve', () => _.strQuote( o.selector ) + ' no current!' );
-    o.it = current.iterationReinit();
+    o.it = current.iterationRemake();
     o.src = null;
   }
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
 
-  return _.selectSingle.pre.call( this, routine, [ o ] );
+  return _.select.head.call( this, routine, [ o ] );
 }
 
 //
@@ -620,7 +628,7 @@ function _selectTracking_body( it )
 
 _.routineExtend( _selectTracking_body, _selectIt.body );
 
-let _selectTracking = _.routineFromPreAndBody( _selectTracking_pre, _selectTracking_body );
+let _selectTracking = _.routineUnite( _selectTracking_head, _selectTracking_body );
 
 _.assert( _selectTracking.defaults.missingAction === 'throw' );
 _selectTracking.defaults.missingAction = 'error';
@@ -795,7 +803,7 @@ function EntityResolve( src, tree )
 
  * @property {Function} onStrFrom
  * @property {Function} onUpTokenDefault
- * @memberof module:Tools/mid/TemplateTreeResolver.wTemplateTreeResolver
+ * @module Tools/mid/TemplateTreeResolver.wTemplateTreeResolver
 */
 
 /*
@@ -814,7 +822,6 @@ let Composes =
 
   stack : _.define.own([]),
 
-  // middleToken : '::',
   prefixToken : '{{',
   postfixToken : '}}',
   downToken : '..',
@@ -843,7 +850,6 @@ let Statics =
 
 let Globals =
 {
-  entityResolve : EntityResolve,
 }
 
 // --
@@ -915,10 +921,6 @@ _.Copyable.mixin( Self );
 _.mapExtend( _global_, Globals );
 
 //
-
-// if( typeof module !== 'undefined' )
-// if( _global_.WTOOLS_PRIVATE )
-// { /* delete require.cache[ module.id ]; */ }
 
 _[ Self.shortName ] = _global_[ Self.name ] = Self;
 if( typeof module !== 'undefined' )
