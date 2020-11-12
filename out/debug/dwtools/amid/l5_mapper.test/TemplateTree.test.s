@@ -629,7 +629,7 @@ function resolveComplex( test )
   var got = template.resolve( '{{complex1}} , {{complex4}}' );
   test.is( _.errIs( got ) );
 
-  test.case = 'complex8( wTestRoutineDescriptor ) can not be resolved';
+  test.case = 'complex8( wTestRoutineObject ) can not be resolved';
   var got = template.resolve( '{{complex8}} , {{complex1}}' );
   test.is( _.errIs( got ) );
 
