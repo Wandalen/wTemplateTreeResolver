@@ -606,8 +606,10 @@ function _selectTracking_head( routine, args )
   {
     debugger;
     _.sure( !!current, 'Cant resolve', () => _.strQuote( o.selector ) + ' no current!' );
-    o.it = current.iterationRemake();
-    o.src = null;
+    current.iterationReinit( o.selector );
+    o.selector = current.iterator.selector;
+    // o.it = current.iterationRemake();
+    // o.src = null;
   }
 
   _.assert( arguments.length === 2 );
