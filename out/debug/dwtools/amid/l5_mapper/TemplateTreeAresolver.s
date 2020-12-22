@@ -641,7 +641,7 @@ function _selectBegin( it )
   let self = this;
 
   // debugger;
-  let found = _.entityFilter( self.stack, { src : it.src } );
+  let found = _.filter_( null, self.stack, { src : it.src } );
 
   if( found.length )
   {
