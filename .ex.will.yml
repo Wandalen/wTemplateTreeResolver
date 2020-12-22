@@ -42,13 +42,6 @@ step :
     export : path::doc
     tar : 0
     criterion :
-      content : 'proto'
-
-  doc.export :
-    inherit : module.export
-    export : path::doc
-    tar : 0
-    criterion :
       content : 'doc'
 
   npm.export :
