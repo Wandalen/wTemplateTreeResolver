@@ -10,6 +10,7 @@ about :
   - chrome >= 60.0.0
   - firefox >= 60.0.0
   keywords :
+  - Template tree
   - wTools
   license : MIT
   author : 'Kostiantyn Wandalen <wanalen@01.school>'

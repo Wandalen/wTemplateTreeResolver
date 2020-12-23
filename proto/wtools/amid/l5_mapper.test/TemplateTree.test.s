@@ -1,4 +1,5 @@
-( function _TemplateTreeResolver_test_s_( ) {
+( function _TemplateTreeResolver_test_s_()
+{
 
 'use strict';
 
@@ -23,7 +24,7 @@ var tree =
 
   atomic1 : 'a1',
   atomic2 : 2,
-  branch1 : { a : 1, b : 'b', c : /xx/, d : '{atomic1}', e : '{atomic2}', f : '{branch2/0}', g :'{branch2/5}' },
+  branch1 : { a : 1, b : 'b', c : /xx/, d : '{atomic1}', e : '{atomic2}', f : '{branch2/0}', g : '{branch2/5}' },
   branch2 : [ 11, 'bb', /yy/, '{atomic1}', '{atomic2}', '{branch1/a}', '{branch1/f}' ],
   branch3 : [ 'a{atomic1}c', 'a{branch1/b}c', 'a{branch3/1}c', 'x{branch3/0}y{branch3/1}{branch3/2}z', '{branch3/0}x{branch3/1}y{branch3/2}' ],
 
@@ -40,8 +41,7 @@ var tree =
 
   emptyString : '',
   resolveEmptyString : '{emptyString}',
-
-}
+};
 
 // --
 // test
@@ -52,7 +52,7 @@ function select( test )
   var context = this;
   var template = new wTemplateTreeResolver
   ({
-    tree : tree,
+    tree,
     prefixToken : '{',
     postfixToken : '}',
     // upToken : '/',
@@ -165,7 +165,7 @@ function selectTry( test )
   var context = this;
   var template = new wTemplateTreeResolver
   ({
-    tree : tree,
+    tree,
     prefixToken : '{',
     postfixToken : '}',
     // upToken : '/',
@@ -202,7 +202,7 @@ function resolve( test )
   var context = this;
   var template = new wTemplateTreeResolver
   ({
-    tree : tree,
+    tree,
     prefixToken : '{',
     postfixToken : '}',
     // upToken : '/',
@@ -392,7 +392,7 @@ function resolveTry( test )
   var context = this;
   var template = new wTemplateTreeResolver
   ({
-    tree : tree,
+    tree,
     prefixToken : '{',
     postfixToken : '}',
   });
@@ -442,7 +442,7 @@ function resolveStringToArray( test )
 
   var template = new wTemplateTreeResolver
   ({
-    tree : tree,
+    tree,
     prefixToken : '{',
     postfixToken : '}',
     // upToken : '/',
@@ -491,10 +491,10 @@ function resolveComplex( test )
 
   var template = new wTemplateTreeResolver
   ({
-    tree : tree,
+    tree,
     prefixToken : '{{',
     postfixToken : '}}',
-    onStrFrom : onStrFrom,
+    onStrFrom,
     // upToken : '/',
   });
 
@@ -507,8 +507,10 @@ function resolveComplex( test )
     return src.map( ( e ) => e instanceof File ? e.filePath : e );
 
     if( _.mapIs( src ) )
-    for( var k in src )
-    src[ k ] = src[ k ] instanceof File ? src[ k ].filePath : src[ k ];
+    {
+      for( var k in src )
+      src[ k ] = src[ k ] instanceof File ? src[ k ].filePath : src[ k ];
+    }
 
     return src;
   }
