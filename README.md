@@ -8,7 +8,7 @@ Class to resolve tree-like data structures with links  or paths in the structure
 git clone https://github.com/Wandalen/wTemplateTreeResolver
 cd wTemplateTreeResolver
 npm install
-node sample/Sample.s
+node sample/trivial/Sample.s
 ```
 
 ## To add to your project
