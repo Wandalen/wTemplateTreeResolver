@@ -242,7 +242,7 @@ function _resolveEntered( src )
   if( _.longIs( src ) )
   return self._resolveArray( src );
 
-  throw _.err( 'Unexpected type of src', _.strType( src ) );
+  throw _.err( 'Unexpected type of src', _.entity.strType( src ) );
 }
 
 //
@@ -313,7 +313,7 @@ function _resolveString( src )
         debugger;
         element2 = _.err
         (
-          'Cant resolve', _.strQuote( src.substring( 0, 80 ) ), '\n', _.strQuote( strip ), 'is', _.strType( element2 ), '\n',
+          'Cant resolve', _.strQuote( src.substring( 0, 80 ) ), '\n', _.strQuote( strip ), 'is', _.entity.strType( element2 ), '\n',
           'Allowed types are: String, Array, Map'
         );
         return element2;
@@ -654,7 +654,7 @@ function _selectBegin( it )
       'Dead lock', _.strQuote( it.src ),
       '\nbecause', _.strQuote( it.selector ), 'does not exist',
       '\nat', _.strQuote( it.path ),
-      '\nin container', _.toStr( it.src )
+      '\nin container', _.entity.exportString( it.src )
     );
     return it.iterator.error;
   }
