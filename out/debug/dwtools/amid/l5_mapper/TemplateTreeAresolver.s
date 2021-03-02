@@ -369,7 +369,7 @@ function _resolveString( src )
 
     if( it && !it.error )
     {
-      let lit = it.lastSelected;
+      let lit = it.lastIt;
       self._selectBegin( lit );
 
       if( it.error )
@@ -386,8 +386,8 @@ function _resolveString( src )
           ({
             subject : element2,
             rootContainer : current ? current.root : self.tree,
-            currentContainer : it.lastSelected.src,
-            path : it.lastSelected.path,
+            currentContainer : it.lastIt.src,
+            path : it.lastIt.path,
             selector : '',
           });
         }
@@ -625,7 +625,7 @@ function _selectTracking_body( it )
 {
   let self = this;
   this._selectIt.body.call( this, it );
-  // self.stack.push( it.lastSelected );
+  // self.stack.push( it.lastIt );
   return it;
 }
 
