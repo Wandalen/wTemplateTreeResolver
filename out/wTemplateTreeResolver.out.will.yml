@@ -162,7 +162,7 @@ module:
           - ../proto/wtools/abase
           - ../proto/wtools/amid
           - ../proto/wtools/amid/l5_mapper
-          - ../proto/wtools/amid/l5_mapper/TemplateTreeAresolver.s
+          - ../proto/wtools/amid/l5_mapper/TemplateTreeResolver.s
           - ../proto/wtools/amid/l5_mapper.test
           - ../proto/wtools/amid/l5_mapper.test/TemplateTree.test.s
           - ../proto/wtools/atop
