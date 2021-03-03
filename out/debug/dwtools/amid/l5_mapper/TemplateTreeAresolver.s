@@ -1,4 +1,4 @@
-( function _TemplateTreeAresolver_s_()
+( function _TemplateTreeResolver_s_()
 {
 
 'use strict';
@@ -8,16 +8,11 @@
   @module Tools/mid/TemplateTreeResolver
 */
 
-/**
- *  */
-
 if( typeof module !== 'undefined' )
 {
-
   let _ = require( '../../../wtools/Tools.s' );
-
+  _.include( 'wResolver' );
   _.include( 'wCopyable' );
-
 }
 
 /**
@@ -607,10 +602,8 @@ function _selectTracking_head( routine, args )
   {
     debugger;
     _.sure( !!current, 'Cant resolve', () => _.strQuote( o.selector ) + ' no current!' );
-    current.iterationReinit( o.selector );
+    current.reperform( o.selector );
     o.selector = current.iterator.selector;
-    // o.it = current.iterationRemake();
-    // o.src = null;
   }
 
   _.assert( arguments.length === 2 );

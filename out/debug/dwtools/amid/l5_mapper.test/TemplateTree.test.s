@@ -10,7 +10,7 @@ if( typeof module !== 'undefined' )
 
   _.include( 'wTesting' );
 
-  require( '../l5_mapper/TemplateTreeAresolver.s' );
+  require( '../l5_mapper/TemplateTreeResolver.s' );
 
 }
 

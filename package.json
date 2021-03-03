@@ -30,7 +30,9 @@
   },
   "dependencies": {
     "wTools": "alpha",
-    "wCopyable": "alpha"
+    "wCopyable": "alpha",
+    "wresolver": "alpha",
+    "wresolverextra": "alpha"
   },
   "devDependencies": {
     "eslint": "7.1.0",
