@@ -11,7 +11,7 @@
     }
   ],
   "license": "MIT",
-  "main": "proto/wtools/amid/l5_mapper/TemplateTreeAresolver.s",
+  "main": "proto/wtools/amid/l5_mapper/TemplateTreeResolver.s",
   "files": [
     "proto/wtools/amid/l5_mapper",
     "proto/wtools/Tools.s",

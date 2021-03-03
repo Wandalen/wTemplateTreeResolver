@@ -9,7 +9,7 @@
     { "name" : "Kostiantyn Wandalen", "email" : "wanalen@01.school" }
   ],
   "license" : "MIT",
-  "main" : "proto/wtools/amid/l5_mapper/TemplateTreeAresolver.s",
+  "main" : "proto/wtools/amid/l5_mapper/TemplateTreeResolver.s",
   "files" : [ "proto/wtools/amid/l5_mapper", "proto/wtools/Tools.s", "out" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
   "repository" :
