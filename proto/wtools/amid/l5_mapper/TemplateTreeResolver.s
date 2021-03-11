@@ -129,7 +129,7 @@ function resolve( src )
 
   let result = self._resolve( src );
 
-  if( result instanceof self.ErrorLooking )
+  if( result instanceof self.LookingError )
   {
     let result = self._resolve( src );
     throw _.err( result );
@@ -158,7 +158,7 @@ function resolveTry( src )
 
   let result = self._resolve( src );
 
-  if( result instanceof self.ErrorLooking )
+  if( result instanceof self.LookingError )
   return;
 
   return result;
@@ -284,7 +284,7 @@ function _resolveString( src )
 
     _.assert( _.strIs( strip ) );
 
-    if( element instanceof _.ErrorLooking || throwen )
+    if( element instanceof _.LookingError || throwen )
     {
       element = _.err
       (
@@ -409,7 +409,7 @@ function _resolveRegexp( src )
   let source = src.source;
   source = self._resolveString( source );
 
-  if( source instanceof self.ErrorLooking )
+  if( source instanceof self.LookingError )
   return source;
 
   if( source === src.source )
@@ -438,7 +438,7 @@ function _resolveMap( src )
       rootContainer : current ? current.root : self.tree,
       selector : s,
     });
-    if( result[ s ] instanceof self.ErrorLooking )
+    if( result[ s ] instanceof self.LookingError )
     {
       return result[ s ];
     }
@@ -465,7 +465,7 @@ function _resolveArray( src )
       rootContainer : current ? current.root : self.tree,
       selector : s,
     });
-    if( result[ s ] instanceof self.ErrorLooking )
+    if( result[ s ] instanceof self.LookingError )
     {
       return result[ s ];
     }
@@ -642,7 +642,7 @@ function _selectBegin( it )
   if( found.length )
   {
     debugger;
-    it.iterator.error = _.ErrorLooking
+    it.iterator.error = _.LookingError
     (
       'Dead lock', _.strQuote( it.src ),
       '\nbecause', _.strQuote( it.selector ), 'does not exist',
@@ -670,8 +670,8 @@ function _selectEnd( it )
 // etc
 // --
 
-let ErrorLooking = _.ErrorLooking;
-_.assert( _.routineIs( ErrorLooking ) );
+let LookingError = _.LookingError;
+_.assert( _.routineIs( LookingError ) );
 
 //
 
@@ -840,7 +840,7 @@ let Restricts =
 let Statics =
 {
   KnownTypes,
-  ErrorLooking,
+  LookingError,
   EntityResolve,
 }
 
