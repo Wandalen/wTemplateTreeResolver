@@ -50,7 +50,6 @@ function init( o )
   if( o )
   self.copy( o );
 
-  debugger;
 }
 
 // --
@@ -506,13 +505,15 @@ function _selectIt_body( it )
   return it;
 }
 
-_.routineExtend( _selectIt_body, _.select.body );
-
+_.routine.extendInheriting( _selectIt_body, _.select.body );
+// var defaults = Object.create( _selectIt_body.defaults );
 var defaults = _selectIt_body.defaults;
-
 defaults.missingAction = 'throw';
+defaults.Looker = defaults;
 
-let _selectIt = _.routineUnite( select_head, _selectIt_body );
+let _selectIt = _.routine.uniteReplacing( select_head, _selectIt_body );
+_.assert( _selectIt_body.defaults.missingAction === 'throw' );
+_.assert( _selectIt.defaults.missingAction === 'throw' );
 
 //
 
@@ -522,7 +523,8 @@ function select_body( o )
   return it.dst;
 }
 
-_.routineExtend( select_body, _selectIt.body );
+_.routine.extendReplacing( select_body, _selectIt.body );
+// _.routine.extendInheriting( select_body, _selectIt.body );
 
 /**
  * @summary Selects raw value from tree using provided selector string.
@@ -551,11 +553,11 @@ _.routineExtend( select_body, _selectIt.body );
  * @module Tools/mid/TemplateTreeResolver
 */
 
-let select = _.routineUnite( select_head, select_body );
+let select = _.routine.uniteInheriting( select_head, select_body );
 
 var defaults = select.defaults;
-
 select.missingAction = 'throw';
+defaults.Looker = defaults;
 
 //
 
@@ -575,11 +577,11 @@ select.missingAction = 'throw';
  * @module Tools/mid/TemplateTreeResolver
 */
 
-let selectTry = _.routineUnite( select_head, select_body );
+let selectTry = _.routine.uniteInheriting( select_head, select_body );
 
 var defaults = selectTry.defaults;
-
 defaults.missingAction = 'undefine';
+defaults.Looker = defaults;
 
 //
 
@@ -622,13 +624,13 @@ function _selectTracking_body( it )
   return it;
 }
 
-_.routineExtend( _selectTracking_body, _selectIt.body );
+_.routine.extendInheriting( _selectTracking_body, _selectIt.body );
+_.assert( _selectTracking_body.defaults.missingAction === 'throw' );
+_selectTracking_body.defaults.missingAction = 'error';
+_selectTracking_body.defaults.Looker = _selectTracking_body.defaults;
+_.assert( _selectTracking_body.defaults.missingAction === 'error' );
 
-let _selectTracking = _.routineUnite( _selectTracking_head, _selectTracking_body );
-
-_.assert( _selectTracking.defaults.missingAction === 'throw' );
-_selectTracking.defaults.missingAction = 'error';
-_.assert( _selectTracking.defaults.missingAction === 'error' );
+let _selectTracking = _.routine.uniteReplacing( _selectTracking_head, _selectTracking_body );
 
 //
 
