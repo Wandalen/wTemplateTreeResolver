@@ -1,47 +1,27 @@
 {
-  "name": "wtemplatetreeresolver",
-  "version": "0.4.238",
-  "engine": "node >= 10.0.0",
-  "description": "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.",
-  "author": "Kostiantyn Wandalen <wanalen@01.school>",
-  "contributors": [
-    {
-      "name": "Kostiantyn Wandalen",
-      "email": "wanalen@01.school"
-    }
+  "name" : "wtemplatetreeresolver",
+  "version" : "0.4.239",
+  "engine" : "node >= 10.0.0",
+  "description" : "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.",
+  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
+  "contributors" :
+  [
+    { "name" : "Kostiantyn Wandalen", "email" : "wanalen@01.school" }
   ],
-  "license": "MIT",
-  "main": "proto/wtools/amid/l5_mapper/TemplateTreeResolver.s",
-  "files": [
-    "proto/wtools/amid/l5_mapper",
-    "proto/wtools/Tools.s",
-    "out"
-  ],
-  "scripts": {
-    "test": "wtest .run 'proto/**' rapidity:-3",
-    "docgen": "wdocgen proto"
+  "license" : "MIT",
+  "main" : "proto/wtools/amid/l5_mapper/TemplateTreeResolver.s",
+  "files" : [ "proto/wtools/amid/l5_mapper", "proto/wtools/Tools.s", "out" ],
+  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/Wandalen/wTemplateTreeResolver.git"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Wandalen/wTemplateTreeResolver.git"
+  "bugs" :
+  {
+    "url" : "https://github.com/Wandalen/wTemplateTreeResolver/issues"
   },
-  "bugs": {
-    "url": "https://github.com/Wandalen/wTemplateTreeResolver/issues"
-  },
-  "dependencies": {
-    "wTools": "alpha",
-    "wCopyable": "alpha",
-    "wresolver": "alpha"
-  },
-  "devDependencies": {
-    "eslint": "7.1.0",
-    "wTesting": "alpha",
-    "wtemplatetreeresolver": "file:."
-  },
-  "keywords": [
-    "Template tree",
-    "wTools",
-    "JSON",
-    "YAML"
-  ]
+  "dependencies" : { "wTools" : "", "wCopyable" : "", "wresolver" : "" },
+  "devDependencies" : { "wTesting" : "", "wtemplatetreeresolver" : "file:.", "eslint" : "7.1.0" },
+  "keywords" : [ "Template tree", "wTools", "JSON", "YAML" ]
 }
