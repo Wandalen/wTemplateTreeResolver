@@ -382,7 +382,6 @@ function resolve( test )
 
   test.close( 'throwing error' );
 
-  debugger;
 }
 
 //

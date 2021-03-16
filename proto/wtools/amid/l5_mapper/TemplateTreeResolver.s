@@ -304,7 +304,6 @@ function _resolveString( src )
       let element2 = self.strFrom( element );
       if( !_.strIs( element2 ) && !_.arrayIs( element2 ) && !_.mapIs( element2 ) )
       {
-        debugger;
         element2 = _.err
         (
           'Cant resolve', _.strQuote( src.substring( 0, 80 ) ), '\n', _.strQuote( strip ), 'is', _.entity.strType( element2 ), '\n',
@@ -602,7 +601,6 @@ function _selectTracking_head( routine, args )
 
   if( _.strBegins( o.selector, [ '..', '.' ] ) )
   {
-    debugger;
     _.sure( !!current, 'Cant resolve', () => _.strQuote( o.selector ) + ' no current!' );
     current.reperform( o.selector );
     o.selector = current.iterator.selector;
@@ -643,7 +641,6 @@ function _selectBegin( it )
 
   if( found.length )
   {
-    debugger;
     it.iterator.error = _.looker.LookingError
     (
       'Dead lock', _.strQuote( it.src ),
