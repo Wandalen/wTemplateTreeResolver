@@ -283,7 +283,7 @@ function _resolveString( src )
 
     _.assert( _.strIs( strip ) );
 
-    if( element instanceof _.LookingError || throwen )
+    if( element instanceof _.looker.LookingError || throwen )
     {
       element = _.err
       (
@@ -644,7 +644,7 @@ function _selectBegin( it )
   if( found.length )
   {
     debugger;
-    it.iterator.error = _.LookingError
+    it.iterator.error = _.looker.LookingError
     (
       'Dead lock', _.strQuote( it.src ),
       '\nbecause', _.strQuote( it.selector ), 'does not exist',
@@ -672,7 +672,7 @@ function _selectEnd( it )
 // etc
 // --
 
-let LookingError = _.LookingError;
+let LookingError = _.looker.LookingError;
 _.assert( _.routineIs( LookingError ) );
 
 //
