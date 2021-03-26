@@ -23,9 +23,9 @@ if( typeof module !== 'undefined' )
  * @module Tools/mid/TemplateTreeResolver
 */
 
-let _ = _global_.wTools;
-let Parent = null;
-let Self = wTemplateTreeResolver;
+const _ = _global_.wTools;
+const Parent = null;
+const Self = wTemplateTreeResolver;
 function wTemplateTreeResolver( o )
 {
   return _.workpiece.construct( Self, this, arguments );
@@ -177,7 +177,8 @@ function _resolve( src )
     subject : src,
     rootContainer : self.tree,
     currentContainer : self.tree,
-    selector : '',
+    // selector : '',
+    selector : '.',
     path : self.upTokenDefault(),
   });
 
@@ -381,7 +382,8 @@ function _resolveString( src )
             rootContainer : current ? current.root : self.tree,
             currentContainer : it.lastIt.src,
             path : it.lastIt.path,
-            selector : '',
+            selector : '.',
+            // selector : '',
           });
         }
         element = element2;
@@ -636,11 +638,11 @@ function _selectBegin( it )
 {
   let self = this;
 
-  // debugger;
   let found = _.filter_( null, self.stack, { src : it.src } );
 
   if( found.length )
   {
+    debugger;
     it.iterator.error = _.looker.LookingError
     (
       'Dead lock', _.strQuote( it.src ),
