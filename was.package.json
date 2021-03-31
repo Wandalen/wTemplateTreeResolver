@@ -10,7 +10,7 @@
   ],
   "license" : "MIT",
   "main" : "proto/wtools/amid/l5_mapper/TemplateTreeResolver.s",
-  "files" : [ "proto/wtools/amid/l5_mapper", "proto/wtools/Tools.s", "out" ],
+  "files" : [ "proto/wtools/amid/l5_mapper", "proto/wtools/Tools.s", "out", "proto/node_modules" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
   "repository" :
   {
@@ -22,6 +22,6 @@
     "url" : "https://github.com/Wandalen/wTemplateTreeResolver/issues"
   },
   "dependencies" : { "wTools" : "", "wCopyable" : "", "wresolver" : "" },
-  "devDependencies" : { "wTesting" : "", "wtemplatetreeresolver" : "file:.", "eslint" : "7.1.0" },
+  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0" },
   "keywords" : [ "Template tree", "wTools", "JSON", "YAML" ]
 }
