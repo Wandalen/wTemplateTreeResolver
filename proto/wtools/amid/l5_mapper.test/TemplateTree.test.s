@@ -50,7 +50,7 @@ var tree =
 
 function select( test )
 {
-  var context = this;
+  let context = this;
   var template = new wTemplateTreeResolver
   ({
     tree,
@@ -163,7 +163,7 @@ function select( test )
 
 function selectTry( test )
 {
-  var context = this;
+  let context = this;
   var template = new wTemplateTreeResolver
   ({
     tree,
@@ -200,7 +200,7 @@ function selectTry( test )
 
 function resolve( test )
 {
-  var context = this;
+  let context = this;
   var template = new wTemplateTreeResolver
   ({
     tree,
@@ -389,7 +389,7 @@ function resolve( test )
 
 function resolveTry( test )
 {
-  var context = this;
+  let context = this;
   var template = new wTemplateTreeResolver
   ({
     tree,
