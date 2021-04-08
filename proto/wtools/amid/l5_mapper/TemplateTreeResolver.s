@@ -10,7 +10,7 @@
 
 if( typeof module !== 'undefined' )
 {
-  let _ = require( '../../../node_modules/Tools' );
+  const _ = require( '../../../node_modules/Tools' );
   _.include( 'wResolver' );
   _.include( 'wCopyable' );
 }
@@ -254,15 +254,26 @@ function _resolveString( src )
   if( src === '' )
   return src;
 
+  // let o22 =
+  // {
+  //   src,
+  //   prefix : self.prefixToken,
+  //   postfix : self.postfixToken,
+  //   onInlined : function( src ){ return [ src ]; },
+  // }
+  // let strips2 = _.strSplitInlinedStereo( o22 );
+
   let o2 =
   {
     src,
     prefix : self.prefixToken,
     postfix : self.postfixToken,
     onInlined : function( src ){ return [ src ]; },
+    preservingEmpty : 0,
   }
-
-  let strips = _.strSplitInlinedStereo( o2 );
+  let strips = _.strSplitInlinedStereo_( o2 );
+  // let strips = _.strSplitInlinedStereo( o2 );
+  // debugger;
 
   /* */
 
