@@ -171,7 +171,7 @@ module:
           - ../proto/wtools/amid/l5_mapper
           - ../proto/wtools/amid/l5_mapper/TemplateTreeResolver.s
           - ../proto/wtools/amid/l5_mapper.test
-          - ../proto/wtools/amid/l5_mapper.test/TemplateTree.test.s
+          - ../proto/wtools/amid/l5_mapper.test/TemplateTreeResolver.test.s
           - ../proto/wtools/atop
     submodule:
       wTools:
@@ -1541,6 +1541,4 @@ module:
       ../.im.will.yml:
         hash: 1f8e49e2d27bd39ab27d44ad11487a9d
         size: 5312
-      wTemplateTreeResolver.out.will.yml:
-        hash: 151ac2254708a1f1a9c7541eb870c58b
-        size: 39882
+      wTemplateTreeResolver.out.will.yml: *ref_0
