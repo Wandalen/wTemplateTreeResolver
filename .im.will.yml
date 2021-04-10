@@ -80,9 +80,8 @@ path:
       raw: compiled
       content: prime
   npm.proto.entry:
-    - >-
-      ../wTemplateTreeResolver/proto/wtools/amid/l5_mapper/TemplateTreeResolver.s
-    - ../wTemplateTreeResolver/proto/node_modules/wtemplatetreeresolver
+    - proto/node_modules/wtemplatetreeresolver
+    - proto/node_modules/Tools
 reflector:
   reflect.proto:
     inherit: predefined.*
