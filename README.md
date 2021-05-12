@@ -4,93 +4,21 @@
 Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.
 
 ### Try out from the repository
+
 ```
 git clone https://github.com/Wandalen/wTemplateTreeResolver
 cd wTemplateTreeResolver
-npm install
+will .npm.install
 node sample/trivial/Sample.s
 ```
 
-## To add to your project
+Make sure you have utility `willbe` installed. To install willbe: `npm i -g willbe@stable`. Willbe is required to build of the module.
+
+### To add to your project
+
 ```
-npm add 'wtemplatetreeresolver@alpha'
+npm add 'wtemplatetreeresolver@stable'
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+`Willbe` is not required to use the module in your project as submodule.
 

@@ -195,7 +195,7 @@ function _resolveEnter( o )
   let current = self.stack[ self.stack.length-1 ];
 
   _.assert( arguments.length === 1 );
-  _.routineOptionsPreservingUndefines( _resolveEnter, arguments );
+  _.routine.options( _resolveEnter, arguments );
 
   if( o.path === null )
   o.path = current ? current.path : self.upTokenDefault();
@@ -926,7 +926,7 @@ _.classDeclare
 });
 
 _.Copyable.mixin( Self );
-_.mapExtend( _global_, Globals );
+_.props.extend( _global_, Globals );
 
 //
 
