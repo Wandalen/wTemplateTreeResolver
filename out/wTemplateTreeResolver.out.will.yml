@@ -2,15 +2,9 @@ format: outwillfile-2.0
 root:
   - wTemplateTreeResolver.out
 consistency:
-  wTemplateTreeResolver.out.will.yml: &ref_0
-    hash: 151ac2254708a1f1a9c7541eb870c58b
-    size: 39882
-  ../.ex.will.yml: &ref_1
-    hash: 79c1b3c01fdc5831b91a109f38ac5732
-    size: 1842
-  ../.im.will.yml: &ref_2
-    hash: 1f8e49e2d27bd39ab27d44ad11487a9d
-    size: 5312
+  ../will.yml: &ref_0
+    hash: a027030b3dad68d16ec3e87cc49c28d5
+    size: 6848
 module:
   wTemplateTreeResolver.out:
     about:
@@ -19,21 +13,21 @@ module:
       description: >-
         Class to resolve tree-like data structures with links  or paths in the
         structure. Use the module to resolve template or path to value.
-      enabled: 1
+      enabled: 0
       version: 0.5.0
-      interpreters:
+      license: MIT
+      npm.name: wtemplatetreeresolver
+      author: Kostiantyn Wandalen <wanalen@01.school>
+      keywords: &ref_1
+        - Template tree
+        - wTools
+      contributors: &ref_2
+        - Kostiantyn Wandalen <wanalen@01.school>
+      interpreters: &ref_3
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
-        - Template tree
-        - wTools
-      license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
-      npm.name: wtemplatetreeresolver
-      npm.scripts:
+      npm.scripts: &ref_4
         test: 'wtest .run proto/** v:5'
     path:
       module.willfiles:
@@ -47,15 +41,11 @@ module:
       module.original.willfiles:
         criterion:
           predefined: 1
-        path:
-          - ../.ex.will.yml
-          - ../.im.will.yml
+        path: ../will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path:
-          - ../.ex.will.yml
-          - ../.im.will.yml
+        path: ../will.yml
       module.peer.in:
         criterion:
           predefined: 1
@@ -146,8 +136,8 @@ module:
         path: '{path::out.*=}/source/Index.s'
       npm.proto.entry:
         path:
-          - ../proto/wtools/amid/l5_mapper/TemplateTreeResolver.s
           - ../proto/node_modules/wtemplatetreeresolver
+          - ../proto/node_modules/Tools
       exported.dir.proto.export:
         criterion:
           generated: 1
@@ -166,13 +156,11 @@ module:
           - ../proto/node_modules/Tools
           - ../proto/node_modules/wtemplatetreeresolver
           - ../proto/wtools
-          - ../proto/wtools/abase
           - ../proto/wtools/amid
           - ../proto/wtools/amid/l5_mapper
           - ../proto/wtools/amid/l5_mapper/TemplateTreeResolver.s
           - ../proto/wtools/amid/l5_mapper.test
           - ../proto/wtools/amid/l5_mapper.test/TemplateTreeResolver.test.s
-          - ../proto/wtools/atop
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -199,7 +187,7 @@ module:
         autoExporting: 0
         enabled: 0
         criterion:
-          debug: 1
+          development: 1
     reflector:
       reflect.proto.debug.raw:
         src:
@@ -713,25 +701,13 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
+      test.docker.dock:
+        steps:
+          - 'step::test.docker.dock'
+      test.docker.run:
+        steps:
+          - 'step::test.docker.run'
       proto.export:
         steps:
           - 'step::proto.export'
@@ -756,12 +732,6 @@ module:
         criterion:
           default: 1
           export: 1
-      test.docker.dock:
-        steps:
-          - 'step::test.docker.dock'
-      test.docker.run:
-        steps:
-          - 'step::test.docker.run'
       debug:
         steps:
           - 'step::clean.out*=2'
@@ -825,9 +795,7 @@ module:
           content: proto
           export: 1
     consistency:
-      wTemplateTreeResolver.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../will.yml: *ref_0
   ../:
     about:
       name: wTemplateTreeResolver
@@ -835,35 +803,24 @@ module:
       description: >-
         Class to resolve tree-like data structures with links  or paths in the
         structure. Use the module to resolve template or path to value.
-      enabled: 1
+      enabled: 0
       version: 0.5.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - Template tree
-        - wTools
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wtemplatetreeresolver
-      npm.scripts:
-        test: 'wtest .run proto/** v:5'
+      author: Kostiantyn Wandalen <wanalen@01.school>
+      keywords: *ref_1
+      contributors: *ref_2
+      interpreters: *ref_3
+      npm.scripts: *ref_4
     path:
       module.willfiles:
         criterion:
           predefined: 1
-        path:
-          - .ex.will.yml
-          - .im.will.yml
+        path: will.yml
       module.original.willfiles:
         criterion:
           predefined: 1
-        path:
-          - .ex.will.yml
-          - .im.will.yml
+        path: will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
@@ -962,9 +919,8 @@ module:
         path: '{path::out.*=}/source/Index.s'
       npm.proto.entry:
         path:
-          - >-
-            ../wTemplateTreeResolver/proto/wtools/amid/l5_mapper/TemplateTreeResolver.s
-          - ../wTemplateTreeResolver/proto/node_modules/wtemplatetreeresolver
+          - proto/node_modules/wtemplatetreeresolver
+          - proto/node_modules/Tools
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -991,7 +947,7 @@ module:
         autoExporting: 0
         enabled: 0
         criterion:
-          debug: 1
+          development: 1
     reflector:
       reflect.proto.debug.raw:
         src:
@@ -1455,6 +1411,12 @@ module:
         inherit:
           - files.transpile
     build:
+      test.docker.dock:
+        steps:
+          - 'step::test.docker.dock'
+      test.docker.run:
+        steps:
+          - 'step::test.docker.run'
       proto.export:
         steps:
           - 'step::proto.export'
@@ -1479,12 +1441,6 @@ module:
         criterion:
           default: 1
           export: 1
-      test.docker.dock:
-        steps:
-          - 'step::test.docker.dock'
-      test.docker.run:
-        steps:
-          - 'step::test.docker.run'
       debug:
         steps:
           - 'step::clean.out*=2'
@@ -1535,10 +1491,6 @@ module:
           - 'build::release'
           - 'build::npm'
     consistency:
-      ../.ex.will.yml:
-        hash: 79c1b3c01fdc5831b91a109f38ac5732
-        size: 1842
-      ../.im.will.yml:
-        hash: 1f8e49e2d27bd39ab27d44ad11487a9d
-        size: 5312
-      wTemplateTreeResolver.out.will.yml: *ref_0
+      ../will.yml:
+        hash: a027030b3dad68d16ec3e87cc49c28d5
+        size: 6848
