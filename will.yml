@@ -4,7 +4,7 @@ about:
     Class to resolve tree-like data structures with links  or paths in the
     structure. Use the module to resolve template or path to value.
   version: 0.5.0
-  enabled: 0
+  enabled: 1
   license: MIT
   npm.name: wtemplatetreeresolver
   author: Kostiantyn Wandalen <wanalen@01.school>

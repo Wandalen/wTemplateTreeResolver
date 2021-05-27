@@ -128,7 +128,7 @@ function resolve( src )
 
   let result = self._resolve( src );
 
-  if( result instanceof self.LookingError )
+  if( result instanceof self.SeekingError )
   {
     let result = self._resolve( src );
     throw _.err( result );
@@ -157,7 +157,7 @@ function resolveTry( src )
 
   let result = self._resolve( src );
 
-  if( result instanceof self.LookingError )
+  if( result instanceof self.SeekingError )
   return;
 
   return result;
@@ -295,7 +295,7 @@ function _resolveString( src )
 
     _.assert( _.strIs( strip ) );
 
-    if( element instanceof _.looker.LookingError || throwen )
+    if( element instanceof _.looker.SeekingError || throwen )
     {
       element = _.err
       (
@@ -420,7 +420,7 @@ function _resolveRegexp( src )
   let source = src.source;
   source = self._resolveString( source );
 
-  if( source instanceof self.LookingError )
+  if( source instanceof self.SeekingError )
   return source;
 
   if( source === src.source )
@@ -449,7 +449,7 @@ function _resolveMap( src )
       rootContainer : current ? current.root : self.tree,
       selector : s,
     });
-    if( result[ s ] instanceof self.LookingError )
+    if( result[ s ] instanceof self.SeekingError )
     {
       return result[ s ];
     }
@@ -476,7 +476,7 @@ function _resolveArray( src )
       rootContainer : current ? current.root : self.tree,
       selector : s,
     });
-    if( result[ s ] instanceof self.LookingError )
+    if( result[ s ] instanceof self.SeekingError )
     {
       return result[ s ];
     }
@@ -521,7 +521,7 @@ _.routine.extendInheriting( _selectIt_body, _.select.body );
 // var defaults = Object.create( _selectIt_body.defaults );
 var defaults = _selectIt_body.defaults;
 defaults.missingAction = 'throw';
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 
 let _selectIt = _.routine.uniteReplacing( select_head, _selectIt_body );
 _.assert( _selectIt_body.defaults.missingAction === 'throw' );
@@ -569,7 +569,7 @@ let select = _.routine.uniteInheriting( select_head, select_body );
 
 var defaults = select.defaults;
 select.missingAction = 'throw';
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 
 //
 
@@ -593,7 +593,7 @@ let selectTry = _.routine.uniteInheriting( select_head, select_body );
 
 var defaults = selectTry.defaults;
 defaults.missingAction = 'undefine';
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 
 //
 
@@ -638,7 +638,7 @@ function _selectTracking_body( it )
 _.routine.extendInheriting( _selectTracking_body, _selectIt.body );
 _.assert( _selectTracking_body.defaults.missingAction === 'throw' );
 _selectTracking_body.defaults.missingAction = 'error';
-_selectTracking_body.defaults.Looker = _selectTracking_body.defaults;
+_selectTracking_body.defaults.Seeker = _selectTracking_body.defaults;
 _.assert( _selectTracking_body.defaults.missingAction === 'error' );
 
 let _selectTracking = _.routine.uniteReplacing( _selectTracking_head, _selectTracking_body );
@@ -654,7 +654,7 @@ function _selectBegin( it )
   if( found.length )
   {
     debugger;
-    it.iterator.error = _.looker.LookingError
+    it.iterator.error = _.looker.SeekingError
     (
       'Dead lock', _.strQuote( it.src ),
       '\nbecause', _.strQuote( it.selector ), 'does not exist',
@@ -682,8 +682,8 @@ function _selectEnd( it )
 // etc
 // --
 
-let LookingError = _.looker.LookingError;
-_.assert( _.routineIs( LookingError ) );
+let SeekingError = _.looker.SeekingError;
+_.assert( _.routineIs( SeekingError ) );
 
 //
 
@@ -852,7 +852,7 @@ let Restricts =
 let Statics =
 {
   KnownTypes,
-  LookingError,
+  SeekingError,
   EntityResolve,
 }
 
