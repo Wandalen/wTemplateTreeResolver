@@ -3,7 +3,7 @@ root:
   - wTemplateTreeResolver.out
 consistency:
   ../will.yml: &ref_0
-    hash: a027030b3dad68d16ec3e87cc49c28d5
+    hash: ca4a9051be06a389128c4b510a2cc764
     size: 6848
 module:
   wTemplateTreeResolver.out:
@@ -13,7 +13,7 @@ module:
       description: >-
         Class to resolve tree-like data structures with links  or paths in the
         structure. Use the module to resolve template or path to value.
-      enabled: 0
+      enabled: 1
       version: 0.5.0
       license: MIT
       npm.name: wtemplatetreeresolver
@@ -327,7 +327,7 @@ module:
           prefixPath: ../proto
         mandatory: 1
         dstRewritingOnlyPreserving: 1
-        linking: hardLinkMaybe
+        linkingAction: hardLinkMaybe
         criterion:
           generated: 1
           content: proto
@@ -803,7 +803,7 @@ module:
       description: >-
         Class to resolve tree-like data structures with links  or paths in the
         structure. Use the module to resolve template or path to value.
-      enabled: 0
+      enabled: 1
       version: 0.5.0
       license: MIT
       npm.name: wtemplatetreeresolver
@@ -1492,5 +1492,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: a027030b3dad68d16ec3e87cc49c28d5
+        hash: ca4a9051be06a389128c4b510a2cc764
         size: 6848
