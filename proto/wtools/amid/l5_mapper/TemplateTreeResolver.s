@@ -653,7 +653,6 @@ function _selectBegin( it )
 
   if( found.length )
   {
-    debugger;
     it.iterator.error = _.looker.SeekingError
     (
       'Dead lock', _.strQuote( it.src ),
