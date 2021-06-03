@@ -675,6 +675,35 @@ function resolveComplex( test )
   test.close( 'errors on join stage' );
 }
 
+//
+
+function sampleTrivial( test )
+{
+
+  var tree =
+  {
+    a : 'a',
+    b : [ 1, 2, 3 ],
+    c : { c1 : [ 1, 2, 3 ], c2 : [ 11, 22, 33 ] },
+    d : '{{^^a}}'
+  };
+
+  var templateTree = new wTemplateTreeResolver();
+  templateTree.tree = tree;
+
+  var b1 = templateTree.select( 'b/1' );
+  var d = templateTree.select( 'd' );
+
+  console.log( 'b/1 :', b1 );
+  /* log : b/1 : 2 */
+  console.log( 'd :', d );
+  /* log : d : {{^^a}} */
+
+  test.identical( b1, 2 );
+  test.identical( d, 'a' );
+
+}
+
 // --
 // declare
 // --
@@ -695,7 +724,9 @@ const Proto =
     resolve,
     resolveTry,
     resolveStringToArray,
-    resolveComplex
+    resolveComplex,
+
+    sampleTrivial,
 
   },
 
