@@ -3,6 +3,21 @@
 
 Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.
 
+### Sample
+
+```js
+var tree =
+{
+  b : [ 1, 2, 3 ],
+};
+
+var templateTree = new _.TemplateTreeResolver();
+templateTree.tree = tree;
+var b1 = templateTree.select( 'b/#1' );
+console.log( 'b/#1 :', b1 );
+```
+[Source code](sample/trivial/Sample.s)
+
 ### Try out from the repository
 
 ```
