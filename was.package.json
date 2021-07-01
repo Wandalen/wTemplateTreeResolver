@@ -1,27 +1,48 @@
 {
-  "name" : "wtemplatetreeresolver",
-  "version" : "0.4.264",
-  "engine" : "node >= 10.0.0",
-  "description" : "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.",
-  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
-  "contributors" :
-  [
-    { "name" : "Kostiantyn Wandalen", "email" : "wanalen@01.school" }
+  "name": "wtemplatetreeresolver",
+  "version": "0.4.265",
+  "engine": "node >= 10.0.0",
+  "description": "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.",
+  "author": "Kostiantyn Wandalen <wanalen@01.school>",
+  "contributors": [
+    {
+      "name": "Kostiantyn Wandalen",
+      "email": "wanalen@01.school"
+    }
   ],
-  "license" : "MIT",
-  "main" : "proto/node_modules/wtemplatetreeresolver",
-  "files" : [ "proto/wtools/amid/l5_mapper", "out", "proto/node_modules", "proto/node_modules/Tools", "proto/node_modules/wtemplatetreeresolver" ],
-  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
-  "repository" :
-  {
-    "type" : "git",
-    "url" : "https://github.com/Wandalen/wTemplateTreeResolver.git"
+  "license": "MIT",
+  "main": "proto/node_modules/wtemplatetreeresolver",
+  "files": [
+    "proto/wtools/amid/l5_mapper",
+    "out",
+    "proto/node_modules",
+    "proto/node_modules/Tools",
+    "proto/node_modules/wtemplatetreeresolver"
+  ],
+  "scripts": {
+    "test": "wtest .run 'proto/**' rapidity:-3",
+    "docgen": "wdocgen proto"
   },
-  "bugs" :
-  {
-    "url" : "https://github.com/Wandalen/wTemplateTreeResolver/issues"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wandalen/wTemplateTreeResolver.git"
   },
-  "dependencies" : { "wTools" : "", "wCopyable" : "", "wresolver" : "" },
-  "devDependencies" : { "wTesting" : "", "eslint" : "7.1.0" },
-  "keywords" : [ "Template tree", "wTools", "JSON", "YAML" ]
+  "bugs": {
+    "url": "https://github.com/Wandalen/wTemplateTreeResolver/issues"
+  },
+  "dependencies": {
+    "wTools": "",
+    "wresolver": "",
+    "wCopyable": ""
+  },
+  "devDependencies": {
+    "wTesting": "",
+    "eslint": "7.1.0"
+  },
+  "keywords": [
+    "Template tree",
+    "wTools",
+    "JSON",
+    "YAML"
+  ]
 }
