@@ -1,6 +1,6 @@
 {
   "name": "wtemplatetreeresolver",
-  "version": "0.4.267",
+  "version": "0.4.268",
   "engine": "node >= 10.0.0",
   "description": "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
