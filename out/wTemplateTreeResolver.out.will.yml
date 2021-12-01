@@ -3,8 +3,8 @@ root:
   - wTemplateTreeResolver.out
 consistency:
   ../will.yml: &ref_0
-    hash: 3dbbdb79c3a47d2f2d9e7726b72e5bc8
-    size: 6707
+    hash: 9c52b174a8f2153a32b262b423bd35a3
+    size: 6715
 module:
   wTemplateTreeResolver.out:
     about:
@@ -1474,5 +1474,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: 3dbbdb79c3a47d2f2d9e7726b72e5bc8
-        size: 6707
+        hash: 9c52b174a8f2153a32b262b423bd35a3
+        size: 6715
