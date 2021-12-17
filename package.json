@@ -1,6 +1,6 @@
 {
   "name": "wtemplatetreeresolver",
-  "version": "0.4.292",
+  "version": "0.4.293",
   "engine": "node >= 10.0.0",
   "description": "Class to resolve tree-like data structures with links  or paths in the structure. Use the module to resolve template or path to value.",
   "author": "Kostiantyn Wandalen <wandalen@obox.systems>",
@@ -31,12 +31,12 @@
     "url": "https://github.com/Wandalen/wTemplateTreeResolver/issues"
   },
   "dependencies": {
-    "wTools": "alpha",
-    "wresolver": "alpha",
-    "wCopyable": "alpha"
+    "wTools": "delta",
+    "wresolver": "delta",
+    "wCopyable": "delta"
   },
   "devDependencies": {
-    "wTesting": "alpha",
+    "wTesting": "delta",
     "eslint": "7.32.0"
   },
   "keywords": [
